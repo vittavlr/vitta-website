@@ -47,7 +47,7 @@ Edit `.env`:
   - If you leave SMTP unset, OTP codes are printed to the server console and also returned in the
     API response (`dev_otp`) so you can still test the flow locally.
 - `CORS_ORIGINS` — the URL(s) your frontend will be served from
-
+ 
 ### 1.3 Run locally
 
 ```bash
