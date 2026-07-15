@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.auth import require_admin, send_email
 from app.database import leads_collection
 from app.models import LeadCreate, LeadUpdate
+from app.config import settings
 
 router = APIRouter(prefix="/api/leads", tags=["leads"])
 
@@ -26,7 +27,7 @@ async def submit_lead(payload: LeadCreate):
     result = await leads_collection.insert_one(doc)
 
     send_email(
-        "owner@vittagroup.com",
+        settings.SEED_OWNER_EMAIL,
         f"New VITTA inquiry from {payload.name}",
         f"Name: {payload.name}\nEmail: {payload.email}\nPhone: {payload.phone or '-'}\n"
         f"Interested in: {payload.service_interest or '-'}\n\nMessage:\n{payload.message}",

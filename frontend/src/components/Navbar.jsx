@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../assets/logo.png';
 
 const links = [
   { to: '/', label: 'Home' },
@@ -17,7 +18,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-linen/90 backdrop-blur border-b border-bronze/10">
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img src="/logo.png" alt="VITTA" className="h-10 w-10 object-contain" />
+          <img src={logo} alt="VITTA" className="h-10 w-10 object-contain" />
           <div className="leading-tight">
             <div className="font-serif text-xl tracking-wide">
               V<span className="text-gold">I</span>TTA
