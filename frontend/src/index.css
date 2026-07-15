@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F5F3ED;
+  color: #4A4433;
+  font-family: 'Lato', sans-serif;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Playfair Display', serif;
+}
+
+.btn-primary {
+  @apply inline-flex items-center gap-2 bg-gradient-to-b from-goldlight to-gold text-white px-6 py-3 rounded-full font-semibold shadow-sm hover:shadow-md transition-shadow;
+}
+
+.btn-outline {
+  @apply inline-flex items-center gap-2 border border-bronze/30 text-bronze px-6 py-3 rounded-full font-medium hover:bg-fawn transition-colors;
+}
+
+.section {
+  @apply max-w-6xl mx-auto px-6 py-20;
+}
+
+.eyebrow {
+  @apply text-gold tracking-[0.2em] text-xs font-semibold uppercase;
+}
+
+.card {
+  @apply bg-white/60 border border-bronze/10 rounded-2xl p-8 backdrop-blur-sm;
+}

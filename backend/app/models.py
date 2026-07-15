@@ -1,0 +1,95 @@
+from typing import Optional, List
+from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime
+
+
+# ---------- Auth ----------
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    role: str
+    name: str
+    email: str
+
+
+class CreateAdminRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class RequestOtpRequest(BaseModel):
+    purpose: str = Field(description="'email_change' | 'password_change' | 'phone_change'")
+    new_value: Optional[str] = None  # new email or new phone, not needed for password_change
+
+
+class VerifyOtpAndUpdateRequest(BaseModel):
+    purpose: str
+    otp: str
+    new_value: Optional[str] = None  # new email, new phone, or new password depending on purpose
+
+
+# ---------- Leads ----------
+class LeadCreate(BaseModel):
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    service_interest: Optional[str] = None
+    message: str
+
+
+class LeadUpdate(BaseModel):
+    status: Optional[str] = None  # new, contacted, in_progress, closed
+    notes: Optional[str] = None
+
+
+# ---------- Services ----------
+class ServiceBase(BaseModel):
+    title: str
+    slug: str
+    short_description: str
+    full_description: str
+    icon: Optional[str] = None
+    order: int = 0
+
+
+class ServiceUpdate(BaseModel):
+    title: Optional[str] = None
+    short_description: Optional[str] = None
+    full_description: Optional[str] = None
+    icon: Optional[str] = None
+    order: Optional[int] = None
+
+
+# ---------- Properties ----------
+class PropertyBase(BaseModel):
+    title: str
+    location: str
+    price: Optional[str] = None
+    property_type: Optional[str] = None  # apartment, plot, villa, commercial
+    description: str
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
+    area_sqft: Optional[float] = None
+    images: List[str] = []
+    status: str = "available"  # available, sold, coming_soon
+    featured: bool = False
+
+
+class PropertyUpdate(BaseModel):
+    title: Optional[str] = None
+    location: Optional[str] = None
+    price: Optional[str] = None
+    property_type: Optional[str] = None
+    description: Optional[str] = None
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
+    area_sqft: Optional[float] = None
+    images: Optional[List[str]] = None
+    status: Optional[str] = None
+    featured: Optional[bool] = None
