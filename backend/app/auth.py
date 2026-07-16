@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 
 from app.config import settings
 from app.database import users_collection
+import requests
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -78,20 +79,28 @@ def generate_otp() -> str:
 
 
 def send_email(to_email: str, subject: str, body: str) -> bool:
-    """Send an email via SMTP. Returns True on success, False otherwise
-    (e.g. SMTP not configured in .env — caller should fall back gracefully)."""
-    if not settings.SMTP_HOST or not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        print(f"[DEV MODE - SMTP NOT CONFIGURED] Would send to {to_email}: {subject}\n{body}")
+    if not settings.BREVO_API_KEY or not settings.BREVO_SENDER_EMAIL:
+        print(f"[DEV MODE - EMAIL NOT CONFIGURED] Would send to {to_email}: {subject}\n{body}")
         return False
     try:
-        msg = MIMEText(body)
-        msg["Subject"] = subject
-        msg["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
-        msg["To"] = to_email
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-            server.starttls()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_USER, [to_email], msg.as_string())
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers={
+                "accept": "application/json",
+                "api-key": settings.BREVO_API_KEY,
+                "content-type": "application/json",
+            },
+            json={
+                "sender": {"name": settings.SMTP_FROM_NAME, "email": settings.BREVO_SENDER_EMAIL},
+                "to": [{"email": to_email}],
+                "subject": subject,
+                "textContent": body,
+            },
+            timeout=10,
+        )
+        if response.status_code >= 400:
+            print(f"Brevo send failed: {response.status_code} {response.text}")
+            return False
         return True
     except Exception as e:
         print(f"Failed to send email: {e}")
