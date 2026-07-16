@@ -13,7 +13,7 @@ export default function AdminDashboard() {
 
   const doLogout = () => {
     logout();
-    navigate('/vitta-private');
+    navigate('/');
   };
 
   return (

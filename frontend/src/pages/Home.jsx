@@ -6,6 +6,11 @@ import { api } from '../api';
 
 const values = ['Trust', 'Transparency', 'Commitment'];
 
+const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+function numberWord(n) {
+  return NUMBER_WORDS[n] || String(n);
+}
+
 export default function Home() {
   const [services, setServices] = useState([]);
 
@@ -91,7 +96,9 @@ export default function Home() {
       <section className="bg-fawn/60">
         <div className="section">
           <p className="eyebrow mb-3">What we do</p>
-          <h2 className="font-serif text-3xl md:text-4xl max-w-2xl mb-12">Six services, one advisor.</h2>
+          <h2 className="font-serif text-3xl md:text-4xl max-w-2xl mb-12">
+            {numberWord(services.length)} service{services.length === 1 ? '' : 's'}, one advisor.
+          </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((s) => (
               <ServiceCard key={s.id} service={s} />

@@ -34,13 +34,21 @@ class VerifyOtpAndUpdateRequest(BaseModel):
     new_value: Optional[str] = None  # new email, new phone, or new password depending on purpose
 
 
+class RecoveryResetRequest(BaseModel):
+    email: EmailStr
+    recovery_code: str
+    new_password: str
+    new_email: Optional[EmailStr] = None
+    new_phone: Optional[str] = None
+
+
 # ---------- Leads ----------
 class LeadCreate(BaseModel):
     name: str
-    email: EmailStr
-    phone: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone: str
     service_interest: Optional[str] = None
-    message: str
+    message: Optional[str] = None
 
 
 class LeadUpdate(BaseModel):

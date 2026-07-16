@@ -62,6 +62,17 @@ async def require_owner(user: dict = Depends(get_current_user)):
     return user
 
 
+def hash_recovery_code(code: str) -> str:
+    return pwd_context.hash(code)
+
+
+def verify_recovery_code(code: str, hashed: str) -> bool:
+    try:
+        return pwd_context.verify(code, hashed)
+    except Exception:
+        return False
+
+
 def generate_otp() -> str:
     return f"{random.randint(0, 999999):06d}"
 

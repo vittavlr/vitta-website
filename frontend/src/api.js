@@ -34,6 +34,8 @@ export const api = {
   getService: (slug) => request(`/api/services/${slug}`),
   getProperties: () => request('/api/properties'),
   submitLead: (payload) => request('/api/leads', { method: 'POST', body: payload }),
+  getPublicContact: () => request('/api/auth/public-contact'),
+  recoveryReset: (payload) => request('/api/auth/recovery-reset', { method: 'POST', body: payload }),
 
   // Owner
   createAdmin: (payload) => request('/api/auth/create-admin', { method: 'POST', body: payload, auth: true }),

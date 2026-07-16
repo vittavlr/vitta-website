@@ -15,7 +15,7 @@ export default function OwnerDashboard() {
 
   const doLogout = () => {
     logout();
-    navigate('/vitta-private');
+    navigate('/');
   };
 
   return (
@@ -64,20 +64,51 @@ function Overview() {
     { label: 'Unactioned', value: stats?.new_leads },
   ];
 
+  const byService = stats?.by_service || [];
+  const maxCount = Math.max(1, ...byService.map((s) => s.count));
+
   return (
-    <div className="grid sm:grid-cols-3 gap-6">
-      {cards.map((c, i) => (
-        <motion.div
-          key={c.label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.1 }}
-          className="card"
-        >
-          <p className="text-sm text-bronze/60 mb-2">{c.label}</p>
-          <p className="font-serif text-4xl text-gold">{c.value ?? '—'}</p>
-        </motion.div>
-      ))}
+    <div className="space-y-6">
+      <div className="grid sm:grid-cols-3 gap-6">
+        {cards.map((c, i) => (
+          <motion.div
+            key={c.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="card"
+          >
+            <p className="text-sm text-bronze/60 mb-2">{c.label}</p>
+            <p className="font-serif text-4xl text-gold">{c.value ?? '—'}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
+        <h3 className="font-serif text-xl mb-5">Inquiries by service</h3>
+        {byService.length === 0 ? (
+          <p className="text-sm text-bronze/60">No inquiries yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {byService.map((s) => (
+              <div key={s.service}>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-bronze/80">{s.service}</span>
+                  <span className="text-bronze/50">{s.count}</span>
+                </div>
+                <div className="h-2.5 rounded-full bg-fawn overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(s.count / maxCount) * 100}%` }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="h-full bg-gradient-to-r from-goldlight to-gold rounded-full"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }

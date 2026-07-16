@@ -8,14 +8,17 @@ from app.auth import (
     generate_otp,
     get_current_user,
     hash_password,
+    hash_recovery_code,
     require_owner,
     send_email,
     verify_password,
+    verify_recovery_code,
 )
 from app.database import otp_collection, users_collection
 from app.models import (
     CreateAdminRequest,
     LoginRequest,
+    RecoveryResetRequest,
     RequestOtpRequest,
     TokenResponse,
     VerifyOtpAndUpdateRequest,
@@ -39,6 +42,45 @@ async def login(payload: LoginRequest):
         name=user["name"],
         email=user["email"],
     )
+
+
+@router.get("/public-contact")
+async def public_contact():
+    """Public — powers the footer's phone/email links, always reflecting the
+    Owner's current details as changed via Settings."""
+    owner = await users_collection.find_one({"role": "owner"})
+    if not owner:
+        return {"phone": None, "email": None}
+    return {"phone": owner.get("phone"), "email": owner.get("email")}
+
+
+@router.post("/recovery-reset")
+async def recovery_reset(payload: RecoveryResetRequest):
+    """Reset password (and optionally email/phone) using the account's recovery
+    code — for use when the account's email is inaccessible, bypassing OTP."""
+    user = await users_collection.find_one({"email": payload.email.lower()})
+    if not user or not user.get("recovery_code_hash"):
+        raise HTTPException(status_code=400, detail="Recovery is not available for this account")
+
+    if not verify_recovery_code(payload.recovery_code, user["recovery_code_hash"]):
+        raise HTTPException(status_code=400, detail="Invalid recovery code")
+
+    if len(payload.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+
+    update = {"password_hash": hash_password(payload.new_password)}
+
+    if payload.new_email:
+        existing = await users_collection.find_one({"email": payload.new_email.lower()})
+        if existing and existing["_id"] != user["_id"]:
+            raise HTTPException(status_code=400, detail="Email already in use")
+        update["email"] = payload.new_email.lower()
+
+    if payload.new_phone:
+        update["phone"] = payload.new_phone
+
+    await users_collection.update_one({"_id": user["_id"]}, {"$set": update})
+    return {"message": "Account recovered — you can now log in with your new password"}
 
 
 @router.get("/me")

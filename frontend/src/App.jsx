@@ -11,6 +11,7 @@ import ServiceDetail from './pages/ServiceDetail';
 import Listings from './pages/Listings';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
+import RecoveryReset from './pages/RecoveryReset';
 import OwnerDashboard from './pages/OwnerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
@@ -40,6 +41,7 @@ export default function App() {
 
         {/* Private area — secret URL prefix, no public nav links */}
         <Route path="/vitta-private" element={<Login />} />
+        <Route path="/vitta-private/recovery" element={<RecoveryReset />} />
         <Route
           path="/vitta-private/owner"
           element={

@@ -1,6 +1,14 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../api';
 
 export default function Footer() {
+  const [contact, setContact] = useState({ phone: null, email: null });
+
+  useEffect(() => {
+    api.getPublicContact().then(setContact).catch(() => {});
+  }, []);
+
   return (
     <footer className="bg-fawn border-t border-bronze/10">
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
@@ -29,12 +37,37 @@ export default function Footer() {
 
         <div>
           <div className="eyebrow mb-4">Reach Us</div>
-          <div className="flex flex-col gap-2 text-sm text-bronze/80">
-            <span>📞 9751655590</span>
-            <span>✉️ owner@vittagroup.com</span>
+          <div className="flex flex-col gap-3 text-sm text-bronze/80">
+            {contact.phone && (
+              <a
+                href={`tel:${contact.phone}`}
+                aria-label="Call us"
+                title="Call us"
+                className="hover:text-gold text-xl w-fit"
+              >
+                📞
+              </a>
+            )}
+            {contact.email && (
+              <a
+                href={`mailto:${contact.email}`}
+                aria-label="Email us"
+                title="Email us"
+                className="hover:text-gold text-xl w-fit"
+              >
+                ✉️
+              </a>
+            )}
           </div>
         </div>
       </div>
+
+      <div className="text-center pb-4">
+        <Link to="/vitta-private" className="text-[11px] text-bronze/30 hover:text-gold">
+          Admin access
+        </Link>
+      </div>
+
       <div className="text-center text-xs text-bronze/50 pb-6">
         © {new Date().getFullYear()} VITTA. All rights reserved.
       </div>

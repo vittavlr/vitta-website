@@ -14,6 +14,8 @@ class Settings:
     SEED_OWNER_EMAIL: str = os.getenv("SEED_OWNER_EMAIL", "owner@vittagroup.com")
     SEED_OWNER_PASSWORD: str = os.getenv("SEED_OWNER_PASSWORD", "ChangeMe123!")
     SEED_OWNER_NAME: str = os.getenv("SEED_OWNER_NAME", "VITTA Owner")
+    SEED_OWNER_PHONE: str = os.getenv("SEED_OWNER_PHONE", "")
+    SEED_OWNER_RECOVERY_CODE: str = os.getenv("SEED_OWNER_RECOVERY_CODE", "")
 
     SMTP_HOST: str = os.getenv("SMTP_HOST", "")
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))

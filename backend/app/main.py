@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.auth import hash_password
+from app.auth import hash_password, hash_recovery_code
 from app.config import settings
 from app.database import services_collection, users_collection
 from app.routers import auth, leads, properties, services
@@ -91,7 +91,10 @@ async def seed_data():
                 "email": settings.SEED_OWNER_EMAIL.lower(),
                 "password_hash": hash_password(settings.SEED_OWNER_PASSWORD),
                 "role": "owner",
-                "phone": None,
+                "phone": settings.SEED_OWNER_PHONE or None,
+                "recovery_code_hash": hash_recovery_code(settings.SEED_OWNER_RECOVERY_CODE)
+                if settings.SEED_OWNER_RECOVERY_CODE
+                else None,
                 "created_at": datetime.now(timezone.utc),
             }
         )

@@ -4,9 +4,9 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth import require_admin, send_email
-from app.database import leads_collection
-from app.models import LeadCreate, LeadUpdate
 from app.config import settings
+from app.database import leads_collection, users_collection
+from app.models import LeadCreate, LeadUpdate
 
 router = APIRouter(prefix="/api/leads", tags=["leads"])
 
@@ -26,11 +26,14 @@ async def submit_lead(payload: LeadCreate):
     doc["created_at"] = datetime.now(timezone.utc)
     result = await leads_collection.insert_one(doc)
 
+    owner = await users_collection.find_one({"role": "owner"})
+    notify_email = owner["email"] if owner else settings.SEED_OWNER_EMAIL
+
     send_email(
-        settings.SEED_OWNER_EMAIL,
+        notify_email,
         f"New VITTA inquiry from {payload.name}",
-        f"Name: {payload.name}\nEmail: {payload.email}\nPhone: {payload.phone or '-'}\n"
-        f"Interested in: {payload.service_interest or '-'}\n\nMessage:\n{payload.message}",
+        f"Name: {payload.name}\nEmail: {payload.email or '-'}\nPhone: {payload.phone}\n"
+        f"Interested in: {payload.service_interest or '-'}\n\nMessage:\n{payload.message or '-'}",
     )
 
     return {"message": "Thank you — we'll be in touch shortly.", "id": str(result.inserted_id)}
@@ -49,7 +52,23 @@ async def lead_stats(admin: dict = Depends(require_admin)):
     now = datetime.now(timezone.utc)
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     this_month = await leads_collection.count_documents({"created_at": {"$gte": month_start}})
-    return {"total_leads": total, "new_leads": new, "leads_this_month": this_month}
+
+    by_service = []
+    cursor = leads_collection.aggregate(
+        [
+            {"$group": {"_id": {"$ifNull": ["$service_interest", "Not specified"]}, "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+        ]
+    )
+    async for row in cursor:
+        by_service.append({"service": row["_id"], "count": row["count"]})
+
+    return {
+        "total_leads": total,
+        "new_leads": new,
+        "leads_this_month": this_month,
+        "by_service": by_service,
+    }
 
 
 @router.patch("/{lead_id}")

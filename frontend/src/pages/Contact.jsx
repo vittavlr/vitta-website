@@ -62,15 +62,15 @@ export default function Contact() {
                 <input required value={form.name} onChange={update('name')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
               </div>
               <div>
-                <label className="text-sm font-medium">Email</label>
-                <input required type="email" value={form.email} onChange={update('email')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+                <label className="text-sm font-medium">Phone</label>
+                <input required type="tel" value={form.phone} onChange={update('phone')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-sm font-medium">Phone (optional)</label>
-                <input value={form.phone} onChange={update('phone')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+                <label className="text-sm font-medium">Email (optional)</label>
+                <input type="email" value={form.email} onChange={update('email')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
               </div>
               <div>
                 <label className="text-sm font-medium">Interested in</label>
@@ -82,8 +82,8 @@ export default function Contact() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Message</label>
-              <textarea required rows={5} value={form.message} onChange={update('message')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+              <label className="text-sm font-medium">Message (optional)</label>
+              <textarea rows={5} value={form.message} onChange={update('message')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
             </div>
 
             {status === 'error' && <p className="text-red-600 text-sm">{errorMsg}</p>}

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -35,7 +34,7 @@ export default function Login() {
         className="card w-full max-w-sm"
       >
         <div className="text-center mb-8">
-          <img src={logo} alt="VITTA" className="h-14 w-14 mx-auto mb-3" />
+          <img src="/logo.png" alt="VITTA" className="h-14 w-14 mx-auto mb-3" />
           <h1 className="font-serif text-2xl">Team Login</h1>
           <p className="text-xs text-bronze/50 mt-1">Restricted access</p>
         </div>
@@ -63,6 +62,12 @@ export default function Login() {
         <button type="submit" disabled={loading} className="btn-primary w-full justify-center disabled:opacity-60">
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
+
+        <div className="text-center mt-5">
+          <Link to="/vitta-private/recovery" className="text-xs text-bronze/50 hover:text-gold">
+            Can't access your email? Use a recovery code
+          </Link>
+        </div>
       </motion.form>
     </div>
   );
