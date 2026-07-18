@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.auth import require_admin
 from app.database import service_items_collection, services_collection
 from app.models import ServiceBase, ServiceItemBase, ServiceItemUpdate, ServiceUpdate
+from app.activity import log_activity
 
 router = APIRouter(prefix="/api/services", tags=["services"])
 
@@ -35,6 +36,7 @@ async def create_service(payload: ServiceBase, admin: dict = Depends(require_adm
     if existing:
         raise HTTPException(status_code=400, detail="A service with this slug already exists")
     result = await services_collection.insert_one(payload.model_dump())
+    await log_activity(admin["email"], f"Created service '{payload.title}'")
     return {"message": "Service created", "id": str(result.inserted_id)}
 
 
@@ -46,6 +48,7 @@ async def update_service(service_id: str, payload: ServiceUpdate, admin: dict = 
     result = await services_collection.update_one({"_id": ObjectId(service_id)}, {"$set": update})
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Service not found")
+    await log_activity(admin["email"], f"Updated service (id {service_id})")
     return {"message": "Service updated — public site reflects this instantly"}
 
 
@@ -54,6 +57,7 @@ async def delete_service(service_id: str, admin: dict = Depends(require_admin)):
     result = await services_collection.delete_one({"_id": ObjectId(service_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Service not found")
+    await log_activity(admin["email"], f"Deleted service (id {service_id})")
     return {"message": "Service deleted"}
 
 

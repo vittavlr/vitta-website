@@ -23,6 +23,29 @@ def serialize_lead(l: dict) -> dict:
 @router.post("")
 async def submit_lead(payload: LeadCreate):
     """Public endpoint — the viewer-facing 'Inquire' / Contact form."""
+    if payload.property_id:
+        existing = await leads_collection.find_one(
+            {"phone": payload.phone, "property_id": payload.property_id}
+        )
+        if existing:
+            raise HTTPException(
+                status_code=400,
+                detail="You've already sent an inquiry for this property with this phone number.",
+            )
+    elif payload.service_interest:
+        existing = await leads_collection.find_one(
+            {
+                "phone": payload.phone,
+                "service_interest": payload.service_interest,
+                "property_id": None,
+            }
+        )
+        if existing:
+            raise HTTPException(
+                status_code=400,
+                detail="You've already sent an inquiry for this service with this phone number.",
+            )
+
     doc = payload.model_dump()
     doc["status"] = "new"
     doc["notes"] = ""
@@ -135,6 +158,10 @@ async def update_lead(lead_id: str, payload: LeadUpdate, admin: dict = Depends(r
     result = await leads_collection.update_one({"_id": ObjectId(lead_id)}, {"$set": update})
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Lead not found")
+    if "status" in update:
+        from app.activity import log_activity
+
+        await log_activity(admin["email"], f"Marked lead (id {lead_id}) as {update['status']}")
     return {"message": "Lead updated"}
 
 

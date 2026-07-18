@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../components/ServiceCard';
 import { SkeletonGrid } from '../components/Skeleton';
+import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 
 export default function Services() {
+  usePageMeta('Our Services', 'Real estate, finance, insurance, mutual funds, legal counsel and college admissions advisory — all under one roof.');
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 

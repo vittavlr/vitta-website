@@ -15,6 +15,7 @@ from app.auth import (
     verify_recovery_code,
 )
 from app.database import otp_collection, users_collection
+from app.activity import log_activity
 from app.models import (
     CreateAdminRequest,
     LoginRequest,
@@ -110,7 +111,27 @@ async def create_admin(payload: CreateAdminRequest, owner: dict = Depends(requir
             "created_at": datetime.now(timezone.utc),
         }
     )
+    await log_activity(owner["email"], f"Created admin account for {payload.email.lower()}")
     return {"message": "Admin account created"}
+
+
+@router.get("/activity")
+async def get_activity_log(owner: dict = Depends(require_owner)):
+    """Owner-only: recent admin/owner actions across the site."""
+    from app.database import activity_log_collection
+
+    cursor = activity_log_collection.find().sort("created_at", -1).limit(100)
+    entries = []
+    async for a in cursor:
+        entries.append(
+            {
+                "id": str(a["_id"]),
+                "user_email": a["user_email"],
+                "action": a["action"],
+                "created_at": a["created_at"].isoformat() if a.get("created_at") else None,
+            }
+        )
+    return entries
 
 
 @router.get("/admins")
@@ -124,9 +145,13 @@ async def list_admins(owner: dict = Depends(require_owner)):
 
 @router.delete("/admins/{admin_id}")
 async def delete_admin(admin_id: str, owner: dict = Depends(require_owner)):
+    admin_user = await users_collection.find_one({"_id": ObjectId(admin_id), "role": "admin"})
     result = await users_collection.delete_one({"_id": ObjectId(admin_id), "role": "admin"})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Admin not found")
+    await log_activity(
+        owner["email"], f"Removed admin account {admin_user['email'] if admin_user else admin_id}"
+    )
     return {"message": "Admin removed"}
 
 

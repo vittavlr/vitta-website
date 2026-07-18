@@ -2,8 +2,9 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth import require_admin
-from app.database import properties_collection
+from app.database import leads_collection, properties_collection
 from app.models import PropertyBase, PropertyUpdate
+from app.activity import log_activity
 
 router = APIRouter(prefix="/api/properties", tags=["properties"])
 
@@ -48,7 +49,21 @@ async def update_property(property_id: str, payload: PropertyUpdate, admin: dict
 
 @router.delete("/{property_id}")
 async def delete_property(property_id: str, admin: dict = Depends(require_admin)):
+    prop = await properties_collection.find_one({"_id": ObjectId(property_id)})
     result = await properties_collection.delete_one({"_id": ObjectId(property_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Property not found")
-    return {"message": "Property deleted"}
+
+    closed_count = 0
+    close_result = await leads_collection.update_many(
+        {"property_id": property_id, "status": {"$ne": "closed"}},
+        {"$set": {"status": "closed"}},
+    )
+    closed_count = close_result.modified_count
+
+    await log_activity(
+        admin["email"],
+        f"Deleted property '{prop['title'] if prop else property_id}'"
+        + (f" — closed {closed_count} related inquiry(ies)" if closed_count else ""),
+    )
+    return {"message": "Property deleted", "leads_closed": closed_count}

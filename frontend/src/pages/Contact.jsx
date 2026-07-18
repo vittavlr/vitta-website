@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
+import { usePageMeta } from '../usePageMeta';
 
 export default function Contact() {
+  usePageMeta('Contact & Enquire', "Tell us what you need — real estate, finance, insurance, legal, or admissions guidance — and we'll get back to you shortly.");
   const [searchParams] = useSearchParams();
   const prefilledService = searchParams.get('service') || '';
   const prefilledProperty = searchParams.get('property') || '';

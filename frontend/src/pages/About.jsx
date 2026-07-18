@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
+import { usePageMeta } from '../usePageMeta';
 
 export default function About() {
+  usePageMeta('About Us', 'VITTA brings real estate, finance, insurance, mutual funds, legal counsel and college admissions guidance under one trusted advisor.');
   return (
     <div className="section">
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="eyebrow mb-3">

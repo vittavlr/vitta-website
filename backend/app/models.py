@@ -59,6 +59,11 @@ class LeadUpdate(BaseModel):
 
 
 # ---------- Services ----------
+class ServiceFAQ(BaseModel):
+    question: str
+    answer: str
+
+
 class ServiceBase(BaseModel):
     title: str
     slug: str
@@ -66,6 +71,7 @@ class ServiceBase(BaseModel):
     full_description: str
     icon: Optional[str] = None
     order: int = 0
+    faqs: List[ServiceFAQ] = []
 
 
 class ServiceUpdate(BaseModel):
@@ -74,6 +80,7 @@ class ServiceUpdate(BaseModel):
     full_description: Optional[str] = None
     icon: Optional[str] = None
     order: Optional[int] = None
+    faqs: Optional[List[ServiceFAQ]] = None
 
 
 # ---------- Service listings (items under a service, e.g. specific offerings) ----------

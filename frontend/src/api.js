@@ -46,6 +46,7 @@ export const api = {
   createAdmin: (payload) => request('/api/auth/create-admin', { method: 'POST', body: payload, auth: true }),
   listAdmins: () => request('/api/auth/admins', { auth: true }),
   deleteAdmin: (id) => request(`/api/auth/admins/${id}`, { method: 'DELETE', auth: true }),
+  getActivityLog: () => request('/api/auth/activity', { auth: true }),
 
   // Credential change (OTP)
   requestOtp: (purpose, new_value) => request('/api/auth/request-otp', { method: 'POST', body: { purpose, new_value }, auth: true }),

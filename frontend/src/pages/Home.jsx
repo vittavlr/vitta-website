@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
 import { SkeletonGrid } from '../components/Skeleton';
+import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 
 const values = ['Trust', 'Transparency', 'Commitment'];
@@ -13,6 +14,10 @@ function numberWord(n) {
 }
 
 export default function Home() {
+  usePageMeta(
+    'Real Estate, Finance & Legal Advisory',
+    'One-stop advisory for real estate, finance, insurance, mutual funds, legal counsel and college admissions — thoughtfully guided from Vellore.'
+  );
   const [services, setServices] = useState([]);
   const [servicesLoading, setServicesLoading] = useState(true);
   const [testimonials, setTestimonials] = useState([]);

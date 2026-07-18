@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { SkeletonGrid } from '../components/Skeleton';
+import { usePageMeta } from '../usePageMeta';
 
 export default function Listings() {
+  usePageMeta('Property Listings', 'Personally verified homes and investments — title, encumbrance, valuation and access all checked.');
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);

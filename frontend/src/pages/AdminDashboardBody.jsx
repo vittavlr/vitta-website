@@ -45,36 +45,94 @@ function LeadsPanel() {
   if (loading) return <p className="text-bronze/60">Loading leads…</p>;
   if (leads.length === 0) return <p className="text-bronze/60">No inquiries yet.</p>;
 
+  // Group by service; groups with more than 2 leads render as a compact table,
+  // smaller groups (and leads with no service set) render as individual cards.
+  const groups = {};
+  leads.forEach((l) => {
+    const key = l.service_interest || 'Not specified';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(l);
+  });
+
+  const STATUS_OPTIONS = ['new', 'contacted', 'in_progress', 'closed'];
+
+  const LeadCard = (l) => (
+    <motion.div key={l.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card">
+      <div className="flex flex-wrap justify-between gap-4">
+        <div>
+          <h4 className="font-serif text-lg">{l.name}</h4>
+          <p className="text-sm text-bronze/60">
+            {l.phone} {l.email && `· ${l.email}`}
+          </p>
+          {l.service_interest && <p className="text-xs text-gold mt-1">{l.service_interest}</p>}
+          {l.property_title && <p className="text-xs text-bronze/50 mt-1">Property: {l.property_title}</p>}
+        </div>
+        <select
+          value={l.status}
+          onChange={(e) => setStatus(l.id, e.target.value)}
+          className="h-fit rounded-lg border border-bronze/20 bg-white/70 px-3 py-1.5 text-sm"
+        >
+          {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+        </select>
+      </div>
+      {l.message && <p className="text-sm text-bronze/80 mt-3">{l.message}</p>}
+      <button onClick={() => remove(l.id)} className="text-xs text-red-600 mt-3">Delete</button>
+    </motion.div>
+  );
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <div className="flex justify-end">
         <button onClick={downloadCsv} className="btn-outline text-sm py-2 px-4">Export leads as CSV ↓</button>
       </div>
-      {leads.map((l) => (
-        <motion.div key={l.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card">
-          <div className="flex flex-wrap justify-between gap-4">
-            <div>
-              <h4 className="font-serif text-lg">{l.name}</h4>
-              <p className="text-sm text-bronze/60">
-                {l.phone} {l.email && `· ${l.email}`}
-              </p>
-              {l.service_interest && <p className="text-xs text-gold mt-1">{l.service_interest}</p>}
-              {l.property_title && <p className="text-xs text-bronze/50 mt-1">Property: {l.property_title}</p>}
+
+      {Object.entries(groups).map(([service, group]) =>
+        group.length > 2 ? (
+          <div key={service}>
+            <h3 className="font-serif text-lg mb-3">{service} <span className="text-sm text-bronze/50 font-sans">({group.length} inquiries)</span></h3>
+            <div className="card p-0 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-bronze/10 text-left text-bronze/60">
+                    <th className="px-4 py-3 font-medium">Name</th>
+                    <th className="px-4 py-3 font-medium">Phone</th>
+                    <th className="px-4 py-3 font-medium">Email</th>
+                    <th className="px-4 py-3 font-medium">Property</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.map((l) => (
+                    <tr key={l.id} className="border-b border-bronze/5 last:border-0">
+                      <td className="px-4 py-3">{l.name}</td>
+                      <td className="px-4 py-3">{l.phone}</td>
+                      <td className="px-4 py-3">{l.email || '—'}</td>
+                      <td className="px-4 py-3">{l.property_title || '—'}</td>
+                      <td className="px-4 py-3">
+                        <select
+                          value={l.status}
+                          onChange={(e) => setStatus(l.id, e.target.value)}
+                          className="rounded-lg border border-bronze/20 bg-white/70 px-2 py-1 text-xs"
+                        >
+                          {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+                        </select>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button onClick={() => remove(l.id)} className="text-xs text-red-600">Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <select
-              value={l.status}
-              onChange={(e) => setStatus(l.id, e.target.value)}
-              className="h-fit rounded-lg border border-bronze/20 bg-white/70 px-3 py-1.5 text-sm"
-            >
-              {['new', 'contacted', 'in_progress', 'closed'].map((s) => (
-                <option key={s} value={s}>{s.replace('_', ' ')}</option>
-              ))}
-            </select>
           </div>
-          {l.message && <p className="text-sm text-bronze/80 mt-3">{l.message}</p>}
-          <button onClick={() => remove(l.id)} className="text-xs text-red-600 mt-3">Delete</button>
-        </motion.div>
-      ))}
+        ) : (
+          <div key={service} className="space-y-4">
+            {group.map((l) => LeadCard(l))}
+          </div>
+        )
+      )}
     </div>
   );
 }
@@ -99,10 +157,19 @@ function ServicesPanel() {
       title: editing.title,
       short_description: editing.short_description,
       full_description: editing.full_description,
+      faqs: editing.faqs || [],
     });
     setEditing(null);
     load();
   };
+
+  const addFaq = () => setEditing({ ...editing, faqs: [...(editing.faqs || []), { question: '', answer: '' }] });
+  const updateFaq = (i, key, value) => {
+    const faqs = [...editing.faqs];
+    faqs[i] = { ...faqs[i], [key]: value };
+    setEditing({ ...editing, faqs });
+  };
+  const removeFaq = (i) => setEditing({ ...editing, faqs: editing.faqs.filter((_, idx) => idx !== i) });
 
   const slugify = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
@@ -170,6 +237,34 @@ function ServicesPanel() {
                   className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
                   placeholder="Full description (shown on service page)"
                 />
+
+                <div>
+                  <p className="text-sm font-medium mb-2">FAQs</p>
+                  <div className="space-y-2">
+                    {(editing.faqs || []).map((faq, i) => (
+                      <div key={i} className="flex gap-2 items-start bg-fawn/40 rounded-lg p-2">
+                        <div className="flex-1 space-y-1">
+                          <input
+                            placeholder="Question"
+                            value={faq.question}
+                            onChange={(e) => updateFaq(i, 'question', e.target.value)}
+                            className="w-full rounded border border-bronze/20 bg-white/70 px-2 py-1.5 text-xs"
+                          />
+                          <textarea
+                            placeholder="Answer"
+                            rows={2}
+                            value={faq.answer}
+                            onChange={(e) => updateFaq(i, 'answer', e.target.value)}
+                            className="w-full rounded border border-bronze/20 bg-white/70 px-2 py-1.5 text-xs"
+                          />
+                        </div>
+                        <button type="button" onClick={() => removeFaq(i)} className="text-xs text-red-600 shrink-0">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                  <button type="button" onClick={addFaq} className="text-xs text-gold mt-2">+ Add FAQ</button>
+                </div>
+
                 <div className="flex gap-3">
                   <button type="submit" className="btn-primary text-sm py-2 px-4">Save — updates live instantly</button>
                   <button type="button" onClick={() => setEditing(null)} className="text-sm text-bronze/60">Cancel</button>

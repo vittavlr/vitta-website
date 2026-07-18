@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import CredentialSettings from '../components/CredentialSettings';
 import AdminDashboardBody from './AdminDashboardBody';
 
-const TABS = ['Overview', 'Leads', 'Services', 'Properties', 'Testimonials', 'Team', 'Settings'];
+const TABS = ['Overview', 'Leads', 'Services', 'Properties', 'Testimonials', 'Team', 'Activity', 'Settings'];
 
 export default function OwnerDashboard() {
   const { user, logout } = useAuth();
@@ -47,6 +47,7 @@ export default function OwnerDashboard() {
 
       {tab === 'Overview' && <Overview />}
       {tab === 'Team' && <TeamPanel />}
+      {tab === 'Activity' && <ActivityPanel />}
       {tab === 'Settings' && <CredentialSettings />}
       {/* Owner has all admin privileges too — reuse the admin panels for content/lead management */}
       {['Leads', 'Services', 'Properties', 'Testimonials'].includes(tab) && <AdminDashboardBody tab={tab} />}
@@ -254,6 +255,34 @@ function TeamPanel() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function ActivityPanel() {
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.getActivityLog().then(setEntries).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p className="text-bronze/60">Loading…</p>;
+  if (entries.length === 0) return <p className="text-bronze/60">No activity recorded yet.</p>;
+
+  return (
+    <div className="space-y-2">
+      {entries.map((e) => (
+        <div key={e.id} className="card flex justify-between items-center gap-4 py-3">
+          <div>
+            <p className="text-sm">{e.action}</p>
+            <p className="text-xs text-bronze/50">{e.user_email}</p>
+          </div>
+          <p className="text-xs text-bronze/40 whitespace-nowrap">
+            {e.created_at ? new Date(e.created_at).toLocaleString() : ''}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
