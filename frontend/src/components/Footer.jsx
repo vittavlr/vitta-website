@@ -68,7 +68,7 @@ export default function Footer() {
               />
             </div>
             <div className="text-sm text-bronze/70 space-y-2">
-              <p>Thutipattu, Vellore, Tamil Nadu, India</p>
+              <p>Vellore, Tamil Nadu, India</p>
               {contact.phone && <a href={`tel:${contact.phone}`} className="hover:text-gold block">📞 {contact.phone}</a>}
               {contact.email && <a href={`mailto:${contact.email}`} className="hover:text-gold block">✉️ {contact.email}</a>}
             </div>
