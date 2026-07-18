@@ -52,7 +52,31 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="text-center pb-4">
+      <div className="border-t border-bronze/10">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <div className="eyebrow mb-4">Visit Us</div>
+          <div className="grid md:grid-cols-2 gap-6 items-start">
+            <div className="rounded-2xl overflow-hidden border border-bronze/10 h-64">
+              <iframe
+                title="VITTA office location"
+                src="https://www.google.com/maps?q=Vellore,Tamil+Nadu,India&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <div className="text-sm text-bronze/70 space-y-2">
+              <p>Vellore, Tamil Nadu, India</p>
+              {contact.phone && <a href={`tel:${contact.phone}`} className="hover:text-gold block">📞 {contact.phone}</a>}
+              {contact.email && <a href={`mailto:${contact.email}`} className="hover:text-gold block">✉️ {contact.email}</a>}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="text-center pb-4 pt-6">
         <Link to="/vitta-private" className="text-[11px] text-bronze/30 hover:text-gold">
           Admin access
         </Link>

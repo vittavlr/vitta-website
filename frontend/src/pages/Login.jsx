@@ -34,6 +34,7 @@ export default function Login() {
         onSubmit={submit}
         className="card w-full max-w-sm"
       >
+        <Link to="/" className="text-xs text-bronze/50 hover:text-gold mb-4 inline-block">← Back to public site</Link>
         <div className="text-center mb-8">
           <img src={logo} alt="VITTA" className="h-14 w-14 mx-auto mb-3" />
           <h1 className="font-serif text-2xl">Team Login</h1>

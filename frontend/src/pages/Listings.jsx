@@ -8,6 +8,7 @@ export default function Listings() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function Listings() {
   const openProperty = (p) => {
     setSelected(p);
     setActiveImage(0);
+    setZoomed(false);
   };
 
   const enquireAbout = (p) => {
@@ -109,19 +111,25 @@ export default function Listings() {
               className="bg-linen rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
               {selected.images?.length > 0 && (
-                <div className="relative">
-                  <img
+                <div className="relative overflow-hidden bg-black">
+                  <motion.img
                     src={selected.images[activeImage]}
                     alt={selected.title}
-                    className="w-full h-72 object-cover"
+                    onClick={() => setZoomed(!zoomed)}
+                    animate={{ scale: zoomed ? 2 : 1 }}
+                    transition={{ duration: 0.3 }}
+                    className={`w-full h-72 object-cover ${zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
                   />
+                  <span className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full pointer-events-none">
+                    {zoomed ? 'Click to zoom out' : 'Click to zoom in'}
+                  </span>
                   {selected.images.length > 1 && (
                     <div className="flex gap-2 p-3 overflow-x-auto bg-white/50">
                       {selected.images.map((img, idx) => (
                         <img
                           key={idx}
                           src={img}
-                          onClick={() => setActiveImage(idx)}
+                          onClick={() => { setActiveImage(idx); setZoomed(false); }}
                           className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 ${
                             idx === activeImage ? 'border-gold' : 'border-transparent'
                           }`}

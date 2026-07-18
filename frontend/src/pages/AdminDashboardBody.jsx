@@ -280,8 +280,9 @@ function PropertiesPanel() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyProperty);
-  const [photos, setPhotos] = useState([]); // [{name, dataUrl}]
+  const [photos, setPhotos] = useState([]); // array of data-url/url strings
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const load = () => api.getProperties().then(setProperties).catch(() => {}).finally(() => setLoading(false));
@@ -292,9 +293,7 @@ function PropertiesPanel() {
     if (files.length === 0) return;
     setUploading(true);
     try {
-      const converted = await Promise.all(
-        files.map(async (f) => ({ name: f.name, dataUrl: await fileToDataUrl(f) }))
-      );
+      const converted = await Promise.all(files.map((f) => fileToDataUrl(f)));
       setPhotos((prev) => [...prev, ...converted]);
     } finally {
       setUploading(false);
@@ -303,6 +302,25 @@ function PropertiesPanel() {
 
   const removePhoto = (idx) => setPhotos((prev) => prev.filter((_, i) => i !== idx));
 
+  const startCreate = () => {
+    setEditingId(null);
+    setForm(emptyProperty);
+    setPhotos([]);
+    setShowForm(true);
+  };
+
+  const startEdit = (p) => {
+    setEditingId(p.id);
+    setForm({
+      title: p.title, location: p.location, price: p.price || '',
+      property_type: p.property_type || 'apartment', description: p.description,
+      bedrooms: p.bedrooms ?? '', bathrooms: p.bathrooms ?? '', area_sqft: p.area_sqft ?? '',
+      status: p.status, featured: p.featured,
+    });
+    setPhotos(p.images || []);
+    setShowForm(true);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -310,12 +328,17 @@ function PropertiesPanel() {
       bedrooms: form.bedrooms ? Number(form.bedrooms) : null,
       bathrooms: form.bathrooms ? Number(form.bathrooms) : null,
       area_sqft: form.area_sqft ? Number(form.area_sqft) : null,
-      images: photos.map((p) => p.dataUrl),
+      images: photos,
     };
-    await api.createProperty(payload);
+    if (editingId) {
+      await api.updateProperty(editingId, payload);
+    } else {
+      await api.createProperty(payload);
+    }
     setForm(emptyProperty);
     setPhotos([]);
     setShowForm(false);
+    setEditingId(null);
     load();
   };
 
@@ -327,12 +350,13 @@ function PropertiesPanel() {
 
   return (
     <div>
-      <button onClick={() => setShowForm(!showForm)} className="btn-primary text-sm py-2 px-4 mb-6">
+      <button onClick={() => (showForm ? setShowForm(false) : startCreate())} className="btn-primary text-sm py-2 px-4 mb-6">
         {showForm ? 'Close' : '+ Add Property'}
       </button>
 
       {showForm && (
         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
+          <p className="text-sm font-medium text-bronze/70">{editingId ? 'Editing property' : 'New property'}</p>
           <div className="grid sm:grid-cols-2 gap-3">
             <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
             <input required placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
@@ -355,9 +379,9 @@ function PropertiesPanel() {
             {uploading && <p className="text-xs text-bronze/50 mt-1">Processing photos…</p>}
             {photos.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
-                {photos.map((p, i) => (
+                {photos.map((src, i) => (
                   <div key={i} className="relative">
-                    <img src={p.dataUrl} alt={p.name} className="w-16 h-16 object-cover rounded-md border border-bronze/20" />
+                    <img src={src} alt="" className="w-16 h-16 object-cover rounded-md border border-bronze/20" />
                     <button type="button" onClick={() => removePhoto(i)} className="absolute -top-2 -right-2 bg-white rounded-full w-5 h-5 text-xs border border-bronze/20">✕</button>
                   </div>
                 ))}
@@ -369,7 +393,10 @@ function PropertiesPanel() {
             <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
             Featured listing
           </label>
-          <button type="submit" className="btn-primary text-sm py-2 px-4">Add Property</button>
+          <div className="flex gap-3">
+            <button type="submit" className="btn-primary text-sm py-2 px-4">{editingId ? 'Save Changes' : 'Add Property'}</button>
+            <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="text-sm text-bronze/60">Cancel</button>
+          </div>
         </motion.form>
       )}
 
@@ -388,7 +415,10 @@ function PropertiesPanel() {
                   <p className="text-sm text-bronze/60">{p.location} · {p.status.replace('_', ' ')}</p>
                 </div>
               </div>
-              <button onClick={() => remove(p.id)} className="text-xs text-red-600">Delete</button>
+              <div className="flex gap-2">
+                <button onClick={() => startEdit(p)} className="btn-outline text-xs py-1.5 px-3">Edit</button>
+                <button onClick={() => remove(p.id)} className="text-xs text-red-600">Delete</button>
+              </div>
             </div>
           ))}
         </div>
