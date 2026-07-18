@@ -91,6 +91,19 @@ class ServiceItemUpdate(BaseModel):
     link: Optional[str] = None
 
 
+# ---------- Testimonials ----------
+class TestimonialBase(BaseModel):
+    name: str
+    role: Optional[str] = None  # e.g. "Homeowner, Vellore"
+    quote: str
+    rating: Optional[int] = None  # 1-5
+
+
+# ---------- Analytics ----------
+class PageViewCreate(BaseModel):
+    path: str
+
+
 # ---------- Properties ----------
 class PropertyBase(BaseModel):
     title: str

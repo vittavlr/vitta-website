@@ -39,6 +39,16 @@ async def submit_lead(payload: LeadCreate):
         f"Interested in: {payload.service_interest or '-'}\n\nMessage:\n{payload.message or '-'}",
     )
 
+    if payload.email:
+        send_email(
+            payload.email,
+            "We've received your inquiry — VITTA",
+            f"Hi {payload.name},\n\nThank you for reaching out to VITTA"
+            f"{f' about {payload.service_interest}' if payload.service_interest else ''}. "
+            f"We've received your inquiry and one of our advisors will be in touch shortly.\n\n"
+            f"Your message:\n{payload.message or '(no message provided)'}\n\n— VITTA",
+        )
+
     return {"message": "Thank you — we'll be in touch shortly.", "id": str(result.inserted_id)}
 
 

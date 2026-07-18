@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { SkeletonGrid } from '../components/Skeleton';
 
 export default function Listings() {
   const [properties, setProperties] = useState([]);
@@ -52,6 +53,8 @@ export default function Listings() {
         Every listing on VITTA is personally verified — title, encumbrance, valuation and access.
         When you're ready, we walk it with you.
       </p>
+
+      {loading && <SkeletonGrid count={3} />}
 
       {!loading && properties.length === 0 && (
         <motion.div

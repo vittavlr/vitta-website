@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
+import { SkeletonGrid } from '../components/Skeleton';
 import { api } from '../api';
 
 const values = ['Trust', 'Transparency', 'Commitment'];
@@ -13,9 +14,12 @@ function numberWord(n) {
 
 export default function Home() {
   const [services, setServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
-    api.getServices().then(setServices).catch(() => {});
+    api.getServices().then(setServices).catch(() => {}).finally(() => setServicesLoading(false));
+    api.getTestimonials().then(setTestimonials).catch(() => {});
   }, []);
 
   return (
@@ -99,12 +103,41 @@ export default function Home() {
             {numberWord(services.length)} service{services.length === 1 ? '' : 's'}, one advisor.
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((s) => (
-              <ServiceCard key={s.id} service={s} />
-            ))}
+            {servicesLoading ? (
+              <SkeletonGrid count={3} />
+            ) : (
+              services.map((s) => <ServiceCard key={s.id} service={s} />)
+            )}
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
+      {testimonials.length > 0 && (
+        <section className="section">
+          <p className="eyebrow mb-3 text-center">What Clients Say</p>
+          <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Trusted by families across Vellore.</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {testimonials.map((t, i) => (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="card"
+              >
+                {t.rating && (
+                  <div className="text-gold mb-3">{'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}</div>
+                )}
+                <p className="text-bronze/80 italic mb-4">"{t.quote}"</p>
+                <p className="text-sm font-semibold">{t.name}</p>
+                {t.role && <p className="text-xs text-bronze/50">{t.role}</p>}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
 
     </div>
   );

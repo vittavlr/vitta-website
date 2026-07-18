@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import WhatsAppButton from './components/WhatsAppButton';
+import { api } from './api';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -21,13 +24,17 @@ function PublicLayout({ children }) {
       <Navbar />
       <main className="min-h-[60vh]">{children}</main>
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }
 
 export default function App() {
   const location = useLocation();
-  const isPrivate = location.pathname.startsWith('/vitta-private');
+
+  useEffect(() => {
+    api.trackPageview(location.pathname);
+  }, [location.pathname]);
 
   return (
     <AnimatePresence mode="wait">

@@ -36,6 +36,11 @@ export const api = {
   submitLead: (payload) => request('/api/leads', { method: 'POST', body: payload }),
   getPublicContact: () => request('/api/auth/public-contact'),
   recoveryReset: (payload) => request('/api/auth/recovery-reset', { method: 'POST', body: payload }),
+  getTestimonials: () => request('/api/testimonials'),
+  createTestimonial: (payload) => request('/api/testimonials', { method: 'POST', body: payload, auth: true }),
+  deleteTestimonial: (id) => request(`/api/testimonials/${id}`, { method: 'DELETE', auth: true }),
+  trackPageview: (path) => request('/api/analytics/pageview', { method: 'POST', body: { path } }).catch(() => {}),
+  getAnalyticsSummary: () => request('/api/analytics/summary', { auth: true }),
 
   // Owner
   createAdmin: (payload) => request('/api/auth/create-admin', { method: 'POST', body: payload, auth: true }),

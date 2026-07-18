@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../components/ServiceCard';
+import { SkeletonGrid } from '../components/Skeleton';
 import { api } from '../api';
 
 export default function Services() {
@@ -28,13 +29,15 @@ export default function Services() {
         Advisory across every major life decision.
       </motion.h1>
 
-      {loading && <p className="text-bronze/60">Loading services…</p>}
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((s) => (
-          <ServiceCard key={s.id} service={s} />
-        ))}
-      </div>
+      {loading ? (
+        <SkeletonGrid count={6} />
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((s) => (
+            <ServiceCard key={s.id} service={s} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

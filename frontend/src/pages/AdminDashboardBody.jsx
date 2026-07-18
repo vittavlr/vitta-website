@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../api';
+import { compressImageFile } from '../imageUtils';
 
 export default function AdminDashboardBody({ tab }) {
   return (
@@ -8,6 +9,7 @@ export default function AdminDashboardBody({ tab }) {
       {tab === 'Leads' && <LeadsPanel />}
       {tab === 'Services' && <ServicesPanel />}
       {tab === 'Properties' && <PropertiesPanel />}
+      {tab === 'Testimonials' && <TestimonialsPanel />}
     </>
   );
 }
@@ -195,14 +197,6 @@ function ServicesPanel() {
   );
 }
 
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 
 const emptyServiceItem = { title: '', description: '', link: '' };
 
@@ -219,7 +213,7 @@ function ServiceItemsManager({ slug }) {
   const onPhotosSelected = async (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
-    const converted = await Promise.all(files.map(async (f) => await fileToDataUrl(f)));
+    const converted = await Promise.all(files.map((f) => compressImageFile(f)));
     setPhotos((prev) => [...prev, ...converted]);
   };
 
@@ -306,7 +300,7 @@ function PropertiesPanel() {
     if (files.length === 0) return;
     setUploading(true);
     try {
-      const converted = await Promise.all(files.map((f) => fileToDataUrl(f)));
+      const converted = await Promise.all(files.map((f) => compressImageFile(f)));
       setPhotos((prev) => [...prev, ...converted]);
     } finally {
       setUploading(false);
@@ -432,6 +426,72 @@ function PropertiesPanel() {
                 <button onClick={() => startEdit(p)} className="btn-outline text-xs py-1.5 px-3">Edit</button>
                 <button onClick={() => remove(p.id)} className="text-xs text-red-600">Delete</button>
               </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const emptyTestimonial = { name: '', role: '', quote: '', rating: 5 };
+
+function TestimonialsPanel() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState(emptyTestimonial);
+  const [showForm, setShowForm] = useState(false);
+
+  const load = () => api.getTestimonials().then(setItems).catch(() => {}).finally(() => setLoading(false));
+  useEffect(() => { load(); }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    await api.createTestimonial({ ...form, rating: Number(form.rating) });
+    setForm(emptyTestimonial);
+    setShowForm(false);
+    load();
+  };
+
+  const remove = async (id) => {
+    if (!confirm('Delete this testimonial?')) return;
+    await api.deleteTestimonial(id);
+    load();
+  };
+
+  return (
+    <div>
+      <button onClick={() => setShowForm(!showForm)} className="btn-primary text-sm py-2 px-4 mb-6">
+        {showForm ? 'Close' : '+ Add Testimonial'}
+      </button>
+
+      {showForm && (
+        <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input required placeholder="Client name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+            <input placeholder="Role/context (optional, e.g. Homeowner, Vellore)" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          </div>
+          <textarea required placeholder="Quote" rows={3} value={form.quote} onChange={(e) => setForm({ ...form, quote: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <select value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+            {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} star{r === 1 ? '' : 's'}</option>)}
+          </select>
+          <button type="submit" className="btn-primary text-sm py-2 px-4">Add Testimonial</button>
+        </motion.form>
+      )}
+
+      {loading ? (
+        <p className="text-bronze/60">Loading…</p>
+      ) : items.length === 0 ? (
+        <p className="text-bronze/60">No testimonials yet — add one above to show it on the homepage.</p>
+      ) : (
+        <div className="space-y-3">
+          {items.map((t) => (
+            <div key={t.id} className="card flex justify-between items-start gap-4">
+              <div>
+                <p className="text-sm italic text-bronze/80">"{t.quote}"</p>
+                <p className="text-xs font-semibold mt-2">{t.name} {t.role && `· ${t.role}`}</p>
+              </div>
+              <button onClick={() => remove(t.id)} className="text-xs text-red-600">Delete</button>
             </div>
           ))}
         </div>
