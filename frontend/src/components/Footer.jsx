@@ -59,7 +59,7 @@ export default function Footer() {
             <div className="rounded-2xl overflow-hidden border border-bronze/10 h-64">
               <iframe
                 title="VITTA office location"
-                src="https://www.google.com/maps?q=12.9692,79.1559&output=embed"
+                src="https://www.google.com/maps?q=12.860948,79.132839&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
