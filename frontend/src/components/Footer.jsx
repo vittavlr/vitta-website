@@ -59,7 +59,7 @@ export default function Footer() {
             <div className="rounded-2xl overflow-hidden border border-bronze/10 h-64">
               <iframe
                 title="VITTA office location"
-                src="https://www.google.com/maps?q=Vellore,Tamil+Nadu,India&output=embed"
+                src="https://maps.app.goo.gl/XBw2AWS7GgfDnFho9"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -68,7 +68,7 @@ export default function Footer() {
               />
             </div>
             <div className="text-sm text-bronze/70 space-y-2">
-              <p>Vellore, Tamil Nadu, India</p>
+              <p>Thutipattu, Vellore, Tamil Nadu, India</p>
               {contact.phone && <a href={`tel:${contact.phone}`} className="hover:text-gold block">📞 {contact.phone}</a>}
               {contact.email && <a href={`mailto:${contact.email}`} className="hover:text-gold block">✉️ {contact.email}</a>}
             </div>
