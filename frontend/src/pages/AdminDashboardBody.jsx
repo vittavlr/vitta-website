@@ -44,6 +44,7 @@ function LeadsPanel() {
                 {l.phone} {l.email && `· ${l.email}`}
               </p>
               {l.service_interest && <p className="text-xs text-gold mt-1">{l.service_interest}</p>}
+              {l.property_id && <p className="text-xs text-bronze/50 mt-1">Property inquiry (ID: {l.property_id})</p>}
             </div>
             <select
               value={l.status}
@@ -70,6 +71,7 @@ function ServicesPanel() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [managingItems, setManagingItems] = useState(null);
   const [newService, setNewService] = useState(emptyService);
   const [error, setError] = useState('');
 
@@ -164,20 +166,21 @@ function ServicesPanel() {
                   <h4 className="font-serif text-lg">{s.title}</h4>
                   <p className="text-sm text-bronze/60">{s.short_description}</p>
                 </div>
-                <button onClick={() => setEditing(s)} className="btn-outline text-sm py-1.5 px-4">Edit</button>
+                <div className="flex gap-2">
+                  <button onClick={() => setManagingItems(managingItems === s.slug ? null : s.slug)} className="btn-outline text-sm py-1.5 px-4">
+                    {managingItems === s.slug ? 'Close Listings' : 'Manage Listings'}
+                  </button>
+                  <button onClick={() => setEditing(s)} className="btn-outline text-sm py-1.5 px-4">Edit</button>
+                </div>
               </div>
             )}
+            {managingItems === s.slug && <ServiceItemsManager slug={s.slug} />}
           </div>
         ))}
       </div>
     </div>
   );
 }
-
-const emptyProperty = {
-  title: '', location: '', price: '', property_type: 'apartment', description: '',
-  bedrooms: '', bathrooms: '', area_sqft: '', status: 'available', featured: false,
-};
 
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -187,6 +190,91 @@ function fileToDataUrl(file) {
     reader.readAsDataURL(file);
   });
 }
+
+const emptyServiceItem = { title: '', description: '', link: '' };
+
+function ServiceItemsManager({ slug }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState(emptyServiceItem);
+  const [photos, setPhotos] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+
+  const load = () => api.getServiceItems(slug).then(setItems).catch(() => {}).finally(() => setLoading(false));
+  useEffect(() => { load(); }, [slug]);
+
+  const onPhotosSelected = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const converted = await Promise.all(files.map(async (f) => await fileToDataUrl(f)));
+    setPhotos((prev) => [...prev, ...converted]);
+  };
+
+  const submit = async (e) => {
+    e.preventDefault();
+    await api.createServiceItem(slug, { ...form, photos });
+    setForm(emptyServiceItem);
+    setPhotos([]);
+    setShowForm(false);
+    load();
+  };
+
+  const remove = async (id) => {
+    if (!confirm('Delete this listing?')) return;
+    await api.deleteServiceItem(id);
+    load();
+  };
+
+  return (
+    <div className="mt-4 pt-4 border-t border-bronze/10">
+      <button onClick={() => setShowForm(!showForm)} className="btn-outline text-sm py-1.5 px-4 mb-4">
+        {showForm ? 'Close' : '+ Add Listing'}
+      </button>
+
+      {showForm && (
+        <form onSubmit={submit} className="space-y-3 mb-4">
+          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <div>
+            <label className="text-sm font-medium block mb-1">Photos</label>
+            <input type="file" accept="image/*" multiple onChange={onPhotosSelected} className="text-sm" />
+            {photos.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {photos.map((p, i) => <img key={i} src={p} className="w-14 h-14 object-cover rounded-md border border-bronze/20" />)}
+              </div>
+            )}
+          </div>
+          <button type="submit" className="btn-primary text-sm py-2 px-4">Add Listing</button>
+        </form>
+      )}
+
+      {loading ? (
+        <p className="text-xs text-bronze/50">Loading listings…</p>
+      ) : items.length === 0 ? (
+        <p className="text-xs text-bronze/50">No listings under this service yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {items.map((item) => (
+            <div key={item.id} className="flex justify-between items-center bg-fawn/50 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2">
+                {item.photos?.[0] && <img src={item.photos[0]} className="w-10 h-10 object-cover rounded" />}
+                <span className="text-sm">{item.title}</span>
+              </div>
+              <button onClick={() => remove(item.id)} className="text-xs text-red-600">Delete</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const emptyProperty = {
+  title: '', location: '', price: '', property_type: 'apartment', description: '',
+  bedrooms: '', bathrooms: '', area_sqft: '', status: 'available', featured: false,
+};
+
 
 function PropertiesPanel() {
   const [properties, setProperties] = useState([]);

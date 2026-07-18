@@ -49,6 +49,7 @@ class LeadCreate(BaseModel):
     phone: str
     service_interest: Optional[str] = None
     message: Optional[str] = None
+    property_id: Optional[str] = None
 
 
 class LeadUpdate(BaseModel):
@@ -72,6 +73,21 @@ class ServiceUpdate(BaseModel):
     full_description: Optional[str] = None
     icon: Optional[str] = None
     order: Optional[int] = None
+
+
+# ---------- Service listings (items under a service, e.g. specific offerings) ----------
+class ServiceItemBase(BaseModel):
+    title: str
+    description: str
+    photos: List[str] = []
+    link: Optional[str] = None
+
+
+class ServiceItemUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    photos: Optional[List[str]] = None
+    link: Optional[str] = None
 
 
 # ---------- Properties ----------

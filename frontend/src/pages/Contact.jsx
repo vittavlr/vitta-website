@@ -1,15 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 
-const serviceOptions = [
-  'Real Estate', 'Finance', 'Insurance', 'Mutual Funds', 'Legal Counsel', 'College Admissions', 'Other',
-];
-
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', service_interest: '', message: '' });
+  const [searchParams] = useSearchParams();
+  const prefilledService = searchParams.get('service') || '';
+  const prefilledProperty = searchParams.get('property') || '';
+  const prefilledPropertyId = searchParams.get('property_id') || '';
+
+  const [services, setServices] = useState([]);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service_interest: prefilledService,
+    message: prefilledProperty ? `Enquiring about: ${prefilledProperty}` : '',
+    property_id: prefilledPropertyId || undefined,
+  });
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    api.getServices().then(setServices).catch(() => {});
+  }, []);
 
   const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -19,7 +33,7 @@ export default function Contact() {
     try {
       await api.submitLead(form);
       setStatus('success');
-      setForm({ name: '', email: '', phone: '', service_interest: '', message: '' });
+      setForm({ name: '', email: '', phone: '', service_interest: '', message: '', property_id: undefined });
     } catch (err) {
       setErrorMsg(err.message);
       setStatus('error');
@@ -56,6 +70,12 @@ export default function Contact() {
             onSubmit={submit}
             className="card space-y-5"
           >
+            {prefilledProperty && (
+              <div className="text-sm bg-fawn rounded-lg px-4 py-2.5 text-bronze/80">
+                Enquiring about <span className="font-semibold">{prefilledProperty}</span>
+              </div>
+            )}
+
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="text-sm font-medium">Name</label>
@@ -73,10 +93,11 @@ export default function Contact() {
                 <input type="email" value={form.email} onChange={update('email')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
               </div>
               <div>
-                <label className="text-sm font-medium">Interested in</label>
-                <select value={form.service_interest} onChange={update('service_interest')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold">
+                <label className="text-sm font-medium">Type of service</label>
+                <select required value={form.service_interest} onChange={update('service_interest')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold">
                   <option value="">Select a service</option>
-                  {serviceOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+                  {services.map((s) => <option key={s.id} value={s.title}>{s.title}</option>)}
+                  <option value="Other">Other</option>
                 </select>
               </div>
             </div>

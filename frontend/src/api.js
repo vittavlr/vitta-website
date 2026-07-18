@@ -57,6 +57,12 @@ export const api = {
   updateService: (id, payload) => request(`/api/services/${id}`, { method: 'PUT', body: payload, auth: true }),
   deleteService: (id) => request(`/api/services/${id}`, { method: 'DELETE', auth: true }),
 
+  // Service listings (items under a service)
+  getServiceItems: (slug) => request(`/api/services/${slug}/items`),
+  createServiceItem: (slug, payload) => request(`/api/services/${slug}/items`, { method: 'POST', body: payload, auth: true }),
+  updateServiceItem: (itemId, payload) => request(`/api/services/items/${itemId}`, { method: 'PUT', body: payload, auth: true }),
+  deleteServiceItem: (itemId) => request(`/api/services/items/${itemId}`, { method: 'DELETE', auth: true }),
+
   // Admin — properties
   createProperty: (payload) => request('/api/properties', { method: 'POST', body: payload, auth: true }),
   updateProperty: (id, payload) => request(`/api/properties/${id}`, { method: 'PUT', body: payload, auth: true }),

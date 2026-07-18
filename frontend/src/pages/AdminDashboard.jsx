@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import CredentialSettings from '../components/CredentialSettings';
 import AdminDashboardBody from './AdminDashboardBody';
@@ -23,7 +23,10 @@ export default function AdminDashboard() {
           <p className="eyebrow mb-1">Admin Dashboard</p>
           <h1 className="font-serif text-3xl">Welcome, {user?.name || user?.email}</h1>
         </div>
-        <button onClick={doLogout} className="btn-outline text-sm py-2 px-4">Sign out</button>
+        <div className="flex items-center gap-3">
+          <Link to="/" className="btn-outline text-sm py-2 px-4">View Public Site</Link>
+          <button onClick={doLogout} className="btn-outline text-sm py-2 px-4">Sign out</button>
+        </div>
       </div>
 
       <div className="flex gap-2 mb-8 border-b border-bronze/10">

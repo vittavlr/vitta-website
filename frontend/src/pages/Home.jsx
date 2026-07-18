@@ -60,7 +60,6 @@ export default function Home() {
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }} className="flex flex-wrap gap-4">
             <Link to="/services" className="btn-primary">Explore services →</Link>
-            <Link to="/contact" className="btn-outline">Enquire now</Link>
           </motion.div>
         </div>
       </section>
@@ -107,12 +106,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section text-center">
-        <h2 className="font-serif text-3xl md:text-4xl mb-4">Have a decision to make?</h2>
-        <p className="text-bronze/70 mb-8">Let's think it through — together.</p>
-        <Link to="/contact" className="btn-primary">Talk to VITTA →</Link>
-      </section>
     </div>
   );
 }

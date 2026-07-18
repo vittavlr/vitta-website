@@ -6,12 +6,15 @@ import { api } from '../api';
 export default function ServiceDetail() {
   const { slug } = useParams();
   const [service, setService] = useState(null);
+  const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     setService(null);
+    setItems([]);
     setError(false);
     api.getService(slug).then(setService).catch(() => setError(true));
+    api.getServiceItems(slug).then(setItems).catch(() => {});
   }, [slug]);
 
   if (error) {
@@ -40,9 +43,39 @@ export default function ServiceDetail() {
           <div className="card max-w-3xl">
             <p className="leading-relaxed text-bronze/80">{service.full_description}</p>
           </div>
+
           <div className="mt-10">
-            <Link to="/contact" className="btn-primary">Enquire about {service.title} →</Link>
+            <Link
+              to={`/contact?service=${encodeURIComponent(service.title)}`}
+              className="btn-primary"
+            >
+              Enquire about {service.title} →
+            </Link>
           </div>
+
+          {items.length > 0 && (
+            <div className="mt-16">
+              <h2 className="font-serif text-2xl mb-6">Available under {service.title}</h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((item) => (
+                  <div key={item.id} className="card overflow-hidden p-0">
+                    {item.photos?.[0] && (
+                      <img src={item.photos[0]} alt={item.title} className="w-full h-40 object-cover" />
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-serif text-lg mb-2">{item.title}</h3>
+                      <p className="text-sm text-bronze/70 mb-3 line-clamp-3">{item.description}</p>
+                      {item.link && (
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-gold text-sm font-semibold hover:underline">
+                          Learn more →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

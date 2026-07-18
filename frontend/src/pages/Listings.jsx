@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 
 export default function Listings() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [activeImage, setActiveImage] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -14,6 +17,20 @@ export default function Listings() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const openProperty = (p) => {
+    setSelected(p);
+    setActiveImage(0);
+  };
+
+  const enquireAbout = (p) => {
+    const params = new URLSearchParams({
+      property: p.title,
+      property_id: p.id,
+      service: 'Real Estate',
+    });
+    navigate(`/contact?${params.toString()}`);
+  };
 
   return (
     <div className="section">
@@ -40,11 +57,10 @@ export default function Listings() {
         >
           <p className="eyebrow mb-4">— Coming Soon —</p>
           <h2 className="font-serif text-3xl mb-4">Fresh listings arriving shortly.</h2>
-          <p className="text-bronze/70 max-w-md mx-auto mb-8">
-            We're finalising verifications on a new set of homes and plots. Share your preferences
-            with us and we'll notify you as soon as the right match is ready.
+          <p className="text-bronze/70 max-w-md mx-auto">
+            We're finalising verifications on a new set of homes and plots. Check back soon, or use
+            the Enquire button above to share your preferences.
           </p>
-          <Link to="/contact" className="btn-primary">Register your interest →</Link>
         </motion.div>
       )}
 
@@ -57,7 +73,9 @@ export default function Listings() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="card overflow-hidden p-0"
+              whileHover={{ y: -6 }}
+              onClick={() => openProperty(p)}
+              className="card overflow-hidden p-0 cursor-pointer"
             >
               {p.images?.[0] && (
                 <img src={p.images[0]} alt={p.title} className="w-full h-48 object-cover" />
@@ -72,6 +90,76 @@ export default function Listings() {
           ))}
         </div>
       )}
+
+      {/* Property detail modal */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+            onClick={() => setSelected(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-linen rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            >
+              {selected.images?.length > 0 && (
+                <div className="relative">
+                  <img
+                    src={selected.images[activeImage]}
+                    alt={selected.title}
+                    className="w-full h-72 object-cover"
+                  />
+                  {selected.images.length > 1 && (
+                    <div className="flex gap-2 p-3 overflow-x-auto bg-white/50">
+                      {selected.images.map((img, idx) => (
+                        <img
+                          key={idx}
+                          src={img}
+                          onClick={() => setActiveImage(idx)}
+                          className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 ${
+                            idx === activeImage ? 'border-gold' : 'border-transparent'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="p-8">
+                <button
+                  onClick={() => setSelected(null)}
+                  className="float-right text-bronze/50 hover:text-bronze text-xl leading-none"
+                >
+                  ✕
+                </button>
+                <h2 className="font-serif text-3xl mb-1">{selected.title}</h2>
+                <p className="text-bronze/60 mb-3">{selected.location}</p>
+                {selected.price && <p className="text-gold font-semibold text-lg mb-4">{selected.price}</p>}
+
+                <div className="flex gap-6 text-sm text-bronze/70 mb-4">
+                  {selected.bedrooms != null && <span>{selected.bedrooms} Bed</span>}
+                  {selected.bathrooms != null && <span>{selected.bathrooms} Bath</span>}
+                  {selected.area_sqft != null && <span>{selected.area_sqft} sqft</span>}
+                  {selected.property_type && <span className="capitalize">{selected.property_type}</span>}
+                </div>
+
+                <p className="text-bronze/80 leading-relaxed mb-6">{selected.description}</p>
+
+                <button onClick={() => enquireAbout(selected)} className="btn-primary">
+                  Enquire about this property →
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

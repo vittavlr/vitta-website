@@ -39,23 +39,13 @@ export default function Footer() {
           <div className="eyebrow mb-4">Reach Us</div>
           <div className="flex flex-col gap-3 text-sm text-bronze/80">
             {contact.phone && (
-              <a
-                href={`tel:${contact.phone}`}
-                aria-label="Call us"
-                title="Call us"
-                className="hover:text-gold text-xl w-fit"
-              >
-                📞
+              <a href={`tel:${contact.phone}`} className="hover:text-gold flex items-center gap-2 w-fit">
+                <span>📞</span> <span>{contact.phone}</span>
               </a>
             )}
             {contact.email && (
-              <a
-                href={`mailto:${contact.email}`}
-                aria-label="Email us"
-                title="Email us"
-                className="hover:text-gold text-xl w-fit"
-              >
-                ✉️
+              <a href={`mailto:${contact.email}`} className="hover:text-gold flex items-center gap-2 w-fit">
+                <span>✉️</span> <span>{contact.email}</span>
               </a>
             )}
           </div>
