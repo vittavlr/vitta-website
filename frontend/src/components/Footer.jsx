@@ -58,7 +58,7 @@ export default function Footer() {
           <div className="rounded-xl overflow-hidden border border-bronze/10 h-32 w-full">
             <iframe
               title="VITTA office location"
-              src="https://www.google.com/maps?q=Vellore,Tamil+Nadu,India&output=embed"
+              src="https://www.google.com/maps?q=12.860966,79.132826&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
