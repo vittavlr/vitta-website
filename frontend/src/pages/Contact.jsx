@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import { usePageMeta } from '../usePageMeta';
+import ReviewModal from '../components/ReviewModal';
 
 export default function Contact() {
   usePageMeta('Contact & Enquire', "Tell us what you need — real estate, finance, insurance, legal, or admissions guidance — and we'll get back to you shortly.");
@@ -24,6 +25,7 @@ export default function Contact() {
     property_title: prefilledProperty || undefined,
   });
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
+  const [showReview, setShowReview] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -66,8 +68,14 @@ export default function Contact() {
           >
             <div className="text-4xl mb-4">✓</div>
             <h2 className="font-serif text-2xl mb-2">Thank you.</h2>
-            <p className="text-bronze/70">We've received your inquiry and will be in touch shortly.</p>
-            <button className="btn-outline mt-8" onClick={() => setStatus('idle')}>Send another</button>
+            <p className="text-bronze/70 mb-6">We've received your inquiry and will be in touch shortly.</p>
+            <div className="border-t border-bronze/10 pt-6 mb-6">
+              <p className="text-sm text-bronze/70 mb-3">Worked with us before? We'd love to hear about it.</p>
+              <button onClick={() => setShowReview(true)} className="text-gold text-sm font-semibold hover:underline">
+                ★ Leave a review
+              </button>
+            </div>
+            <button className="btn-outline" onClick={() => setStatus('idle')}>Send another</button>
           </motion.div>
         ) : (
           <motion.form
@@ -128,6 +136,7 @@ export default function Contact() {
           </motion.form>
         )}
       </AnimatePresence>
+      {showReview && <ReviewModal onClose={() => setShowReview(false)} />}
     </div>
   );
 }

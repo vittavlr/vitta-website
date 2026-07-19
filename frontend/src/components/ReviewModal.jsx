@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
+import StarRating from './StarRating';
 
 export default function ReviewModal({ onClose }) {
   const [form, setForm] = useState({ name: '', role: '', quote: '', rating: 5 });
@@ -72,13 +73,10 @@ export default function ReviewModal({ onClose }) {
                 onChange={(e) => setForm({ ...form, quote: e.target.value })}
                 className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
               />
-              <select
-                value={form.rating}
-                onChange={(e) => setForm({ ...form, rating: e.target.value })}
-                className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
-              >
-                {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{'★'.repeat(r)}{'☆'.repeat(5 - r)}</option>)}
-              </select>
+              <div>
+                <label className="text-sm font-medium block mb-2">Your rating</label>
+                <StarRating value={form.rating} onChange={(rating) => setForm({ ...form, rating })} />
+              </div>
 
               {status === 'error' && <p className="text-red-600 text-sm">{error}</p>}
 

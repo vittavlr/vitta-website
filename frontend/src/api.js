@@ -50,6 +50,8 @@ export const api = {
   listAdmins: () => request('/api/auth/admins', { auth: true }),
   deleteAdmin: (id) => request(`/api/auth/admins/${id}`, { method: 'DELETE', auth: true }),
   getActivityLog: () => request('/api/auth/activity', { auth: true }),
+  deleteActivityEntry: (id) => request(`/api/auth/activity/${id}`, { method: 'DELETE', auth: true }),
+  clearActivityLog: () => request('/api/auth/activity', { method: 'DELETE', auth: true }),
 
   // Credential change (OTP)
   requestOtp: (purpose, new_value) => request('/api/auth/request-otp', { method: 'POST', body: { purpose, new_value }, auth: true }),

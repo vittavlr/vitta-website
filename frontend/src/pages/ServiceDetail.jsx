@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
-import { serviceImageUrl } from '../serviceImages';
+import ThemedIllustration from '../components/ThemedIllustration';
 import { usePageMeta } from '../usePageMeta';
 
 function FAQAccordion({ faqs }) {
@@ -46,7 +46,6 @@ export default function ServiceDetail() {
   const [service, setService] = useState(null);
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
-  const [imgFailed, setImgFailed] = useState(false);
 
   usePageMeta(service?.title, service?.short_description);
 
@@ -80,18 +79,17 @@ export default function ServiceDetail() {
         >
           {/* Themed hero, same treatment as the homepage hero */}
           <div className="relative h-64 md:h-80 overflow-hidden">
-            {!imgFailed ? (
+            {service.image ? (
               <motion.img
                 initial={{ scale: 1.15 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 8, ease: 'easeOut' }}
-                src={serviceImageUrl(slug, 1600, 500)}
+                src={service.image}
                 alt={service.title}
-                onError={() => setImgFailed(true)}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-goldlight/40 to-bronze/20" />
+              <ThemedIllustration kind={slug} className="absolute inset-0 w-full h-full" />
             )}
             <div className="absolute inset-0 bg-linen/80" />
             <div className="relative section flex flex-col justify-end h-full pb-8">

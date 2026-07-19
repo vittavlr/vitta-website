@@ -231,26 +231,44 @@ function ActivityPanel() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.getActivityLog().then(setEntries).catch(() => {}).finally(() => setLoading(false));
-  }, []);
+  const load = () => api.getActivityLog().then(setEntries).catch(() => {}).finally(() => setLoading(false));
+  useEffect(() => { load(); }, []);
+
+  const removeEntry = async (id) => {
+    await api.deleteActivityEntry(id);
+    load();
+  };
+
+  const clearAll = async () => {
+    if (!confirm('Clear the entire activity log? This cannot be undone.')) return;
+    await api.clearActivityLog();
+    load();
+  };
 
   if (loading) return <p className="text-bronze/60">Loading…</p>;
   if (entries.length === 0) return <p className="text-bronze/60">No activity recorded yet.</p>;
 
   return (
-    <div className="space-y-2">
-      {entries.map((e) => (
-        <div key={e.id} className="card flex justify-between items-center gap-4 py-3">
-          <div>
-            <p className="text-sm">{e.action}</p>
-            <p className="text-xs text-bronze/50">{e.user_email}</p>
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <button onClick={clearAll} className="text-xs text-red-600">Clear all</button>
+      </div>
+      <div className="space-y-2">
+        {entries.map((e) => (
+          <div key={e.id} className="card flex justify-between items-center gap-4 py-3">
+            <div>
+              <p className="text-sm">{e.action}</p>
+              <p className="text-xs text-bronze/50">{e.user_email}</p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <p className="text-xs text-bronze/40 whitespace-nowrap">
+                {e.created_at ? new Date(e.created_at).toLocaleString() : ''}
+              </p>
+              <button onClick={() => removeEntry(e.id)} className="text-xs text-red-600">✕</button>
+            </div>
           </div>
-          <p className="text-xs text-bronze/40 whitespace-nowrap">
-            {e.created_at ? new Date(e.created_at).toLocaleString() : ''}
-          </p>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

@@ -71,6 +71,7 @@ class ServiceBase(BaseModel):
     short_description: str
     full_description: str
     icon: Optional[str] = None
+    image: Optional[str] = None
     order: int = 0
     faqs: List[ServiceFAQ] = []
 
@@ -80,6 +81,7 @@ class ServiceUpdate(BaseModel):
     short_description: Optional[str] = None
     full_description: Optional[str] = None
     icon: Optional[str] = None
+    image: Optional[str] = None
     order: Optional[int] = None
     faqs: Optional[List[ServiceFAQ]] = None
 

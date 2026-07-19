@@ -1,5 +1,12 @@
 import { motion } from 'framer-motion';
 import { usePageMeta } from '../usePageMeta';
+import ThemedIllustration from '../components/ThemedIllustration';
+
+const VALUES = [
+  { name: 'Trust', kind: 'trust', text: 'Every recommendation is grounded in verified facts, not sales targets.' },
+  { name: 'Transparency', kind: 'transparency', text: 'Clear fees, clear timelines, and honest answers — always.' },
+  { name: 'Commitment', kind: 'commitment', text: 'We stay with you through the decision, not just the deal.' },
+];
 
 export default function About() {
   usePageMeta('About Us', 'VITTA brings real estate, finance, insurance, mutual funds, legal counsel and college admissions guidance under one trusted advisor.');
@@ -38,16 +45,20 @@ export default function About() {
       </motion.p>
 
       <div className="grid sm:grid-cols-3 gap-6 mt-16">
-        {['Trust', 'Transparency', 'Commitment'].map((v, i) => (
+        {VALUES.map((v, i) => (
           <motion.div
-            key={v}
+            key={v.name}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="card"
+            className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
           >
-            <h3 className="font-serif text-2xl text-gold mb-2">{v}</h3>
+            <ThemedIllustration kind={v.kind} className="h-28 w-full" />
+            <div className="p-6">
+              <h3 className="font-serif text-2xl text-gold mb-2">{v.name}</h3>
+              <p className="text-sm text-bronze/70">{v.text}</p>
+            </div>
           </motion.div>
         ))}
       </div>

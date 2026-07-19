@@ -11,7 +11,7 @@ export default function SplashScreen({ children }) {
     const timer = setTimeout(() => {
       sessionStorage.setItem(SESSION_KEY, 'true');
       setShowSplash(false);
-    }, 8000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [showSplash]);
 
@@ -37,6 +37,15 @@ export default function SplashScreen({ children }) {
                 setShowSplash(false);
               }}
             />
+            <button
+              onClick={() => {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                setShowSplash(false);
+              }}
+              className="absolute top-5 right-5 text-white/90 text-sm font-medium bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-4 py-2 transition-colors"
+            >
+              Skip →
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

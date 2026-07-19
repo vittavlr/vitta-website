@@ -134,6 +134,28 @@ async def get_activity_log(owner: dict = Depends(require_owner)):
     return entries
 
 
+@router.delete("/activity/{entry_id}")
+async def delete_activity_entry(entry_id: str, owner: dict = Depends(require_owner)):
+    """Owner-only — deleting activity entries is restricted to the single
+    Owner account by the require_owner dependency; no admin account can ever
+    hold the 'owner' role, so this can't be reached by any other admin."""
+    from app.database import activity_log_collection
+
+    result = await activity_log_collection.delete_one({"_id": ObjectId(entry_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Activity entry not found")
+    return {"message": "Activity entry deleted"}
+
+
+@router.delete("/activity")
+async def clear_activity_log(owner: dict = Depends(require_owner)):
+    """Owner-only — clears the entire activity log."""
+    from app.database import activity_log_collection
+
+    result = await activity_log_collection.delete_many({})
+    return {"message": f"Cleared {result.deleted_count} activity entries"}
+
+
 @router.get("/admins")
 async def list_admins(owner: dict = Depends(require_owner)):
     cursor = users_collection.find({"role": "admin"})

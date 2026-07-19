@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { serviceImageUrl } from '../serviceImages';
+import ThemedIllustration from './ThemedIllustration';
 
 export default function ServiceCard({ service }) {
-  const [imgFailed, setImgFailed] = useState(false);
-
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -13,18 +10,12 @@ export default function ServiceCard({ service }) {
       className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)] transition-shadow duration-300 flex flex-col h-full"
     >
       <div className="relative h-36 overflow-hidden shrink-0">
-        {!imgFailed ? (
-          <img
-            src={serviceImageUrl(service.slug, 500, 300)}
-            alt={service.title}
-            loading="lazy"
-            onError={() => setImgFailed(true)}
-            className="w-full h-full object-cover"
-          />
+        {service.image ? (
+          <img src={service.image} alt={service.title} loading="lazy" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-goldlight/40 to-bronze/20" />
+          <ThemedIllustration kind={service.slug} className="w-full h-full" />
         )}
-        <div className="absolute inset-0 bg-linen/25" />
+        <div className="absolute inset-0 bg-linen/20" />
       </div>
 
       <div className="flex flex-col flex-1 p-8">

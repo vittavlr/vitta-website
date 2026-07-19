@@ -184,7 +184,7 @@ function LeadsPanel() {
   );
 }
 
-const emptyService = { title: '', slug: '', short_description: '', full_description: '' };
+const emptyService = { title: '', slug: '', short_description: '', full_description: '', image: null };
 
 function ServicesPanel() {
   const [services, setServices] = useState([]);
@@ -205,9 +205,24 @@ function ServicesPanel() {
       short_description: editing.short_description,
       full_description: editing.full_description,
       faqs: editing.faqs || [],
+      image: editing.image,
     });
     setEditing(null);
     load();
+  };
+
+  const onEditImageSelected = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const dataUrl = await compressImageFile(file);
+    setEditing({ ...editing, image: dataUrl });
+  };
+
+  const onNewImageSelected = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const dataUrl = await compressImageFile(file);
+    setNewService({ ...newService, image: dataUrl });
   };
 
   const addFaq = () => setEditing({ ...editing, faqs: [...(editing.faqs || []), { question: '', answer: '' }] });
@@ -230,6 +245,7 @@ function ServicesPanel() {
         short_description: newService.short_description,
         full_description: newService.full_description,
         order: services.length + 1,
+        image: newService.image,
       });
       setNewService(emptyService);
       setCreating(false);
@@ -255,6 +271,11 @@ function ServicesPanel() {
           <input required placeholder="Service title (e.g. Tax Advisory)" value={newService.title} onChange={(e) => setNewService({ ...newService, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <textarea required placeholder="Short description (shown on cards)" rows={2} value={newService.short_description} onChange={(e) => setNewService({ ...newService, short_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <textarea required placeholder="Full description (shown on the service page)" rows={4} value={newService.full_description} onChange={(e) => setNewService({ ...newService, full_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <div>
+            <label className="text-sm font-medium block mb-1">Photo (optional — a themed illustration is used automatically if you skip this)</label>
+            <input type="file" accept="image/*" onChange={onNewImageSelected} className="text-sm" />
+            {newService.image && <img src={newService.image} alt="" className="w-24 h-16 object-cover rounded-md mt-2 border border-bronze/20" />}
+          </div>
           {error && <p className="text-red-600 text-sm">{error}</p>}
           <button type="submit" className="btn-primary text-sm py-2 px-4">Add Service</button>
         </motion.form>
@@ -284,6 +305,15 @@ function ServicesPanel() {
                   className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
                   placeholder="Full description (shown on service page)"
                 />
+
+                <div>
+                  <label className="text-sm font-medium block mb-1">Photo (optional — a themed illustration is used automatically if none is set)</label>
+                  <input type="file" accept="image/*" onChange={onEditImageSelected} className="text-sm" />
+                  {editing.image && <img src={editing.image} alt="" className="w-24 h-16 object-cover rounded-md mt-2 border border-bronze/20" />}
+                  {editing.image && (
+                    <button type="button" onClick={() => setEditing({ ...editing, image: null })} className="text-xs text-red-600 ml-3">Remove photo</button>
+                  )}
+                </div>
 
                 <div>
                   <p className="text-sm font-medium mb-2">FAQs</p>
