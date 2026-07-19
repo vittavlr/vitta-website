@@ -57,11 +57,9 @@ export default function OwnerDashboard() {
 
 function Overview() {
   const [stats, setStats] = useState(null);
-  const [analytics, setAnalytics] = useState(null);
 
   useEffect(() => {
     api.leadStats().then(setStats).catch(() => {});
-    api.getAnalyticsSummary().then(setAnalytics).catch(() => {});
   }, []);
 
   const cards = [
@@ -158,36 +156,6 @@ function Overview() {
           </div>
         )}
       </motion.div>
-
-      {analytics?.by_path?.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="card">
-          <div className="flex justify-between items-center mb-5">
-            <h3 className="font-serif text-xl">Most visited pages</h3>
-            <span className="text-xs text-bronze/50">{analytics.total_views} total views</span>
-          </div>
-          <div className="space-y-3">
-            {analytics.by_path.map((p) => {
-              const maxViews = Math.max(1, ...analytics.by_path.map((x) => x.count));
-              return (
-                <div key={p.path}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-bronze/80 font-mono text-xs">{p.path || '/'}</span>
-                    <span className="text-bronze/50">{p.count}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-fawn overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(p.count / maxViews) * 100}%` }}
-                      transition={{ duration: 0.6, ease: 'easeOut' }}
-                      className="h-full bg-gradient-to-r from-goldlight/70 to-bronze/70 rounded-full"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
     </div>
 
   );

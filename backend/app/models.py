@@ -56,6 +56,7 @@ class LeadCreate(BaseModel):
 class LeadUpdate(BaseModel):
     status: Optional[str] = None  # new, contacted, in_progress, closed
     notes: Optional[str] = None
+    follow_up_date: Optional[str] = None  # ISO date string, e.g. "2026-08-01"
 
 
 # ---------- Services ----------
@@ -104,6 +105,14 @@ class TestimonialBase(BaseModel):
     role: Optional[str] = None  # e.g. "Homeowner, Vellore"
     quote: str
     rating: Optional[int] = None  # 1-5
+
+
+class TestimonialUpdate(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    quote: Optional[str] = None
+    rating: Optional[int] = None
+    approved: Optional[bool] = None
 
 
 # ---------- Analytics ----------

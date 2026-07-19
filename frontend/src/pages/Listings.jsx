@@ -115,7 +115,7 @@ export default function Listings() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-linen rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-linen rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto print-area"
             >
               {selected.images?.length > 0 && (
                 <div className="relative overflow-hidden bg-black">
@@ -167,9 +167,14 @@ export default function Listings() {
 
                 <p className="text-bronze/80 leading-relaxed mb-6">{selected.description}</p>
 
-                <button onClick={() => enquireAbout(selected)} className="btn-primary">
-                  Enquire about this property →
-                </button>
+                <div className="flex gap-3 no-print">
+                  <button onClick={() => enquireAbout(selected)} className="btn-primary">
+                    Enquire about this property →
+                  </button>
+                  <button onClick={() => window.print()} className="btn-outline">
+                    🖨 Print
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>

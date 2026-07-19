@@ -36,3 +36,16 @@ h1, h2, h3, h4, .font-display {
 .card {
   @apply bg-white/40 border border-white/40 rounded-2xl p-8 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)];
 }
+
+@media print {
+  nav, footer, .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

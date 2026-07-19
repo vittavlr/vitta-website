@@ -49,8 +49,11 @@ export default function Contact() {
     <div className="section max-w-2xl">
       <p className="eyebrow mb-3">Contact</p>
       <h1 className="font-serif text-4xl md:text-5xl mb-4">Let's think it through — together.</h1>
-      <p className="text-bronze/70 mb-10">
+      <p className="text-bronze/70 mb-4">
         Tell us a little about what you need, and we'll get back to you shortly.
+      </p>
+      <p className="inline-flex items-center gap-2 text-xs text-gold bg-gold/10 rounded-full px-4 py-2 mb-10 w-fit">
+        ⏱ We respond to every inquiry within 24 hours
       </p>
 
       <AnimatePresence mode="wait">

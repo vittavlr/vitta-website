@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import WhatsAppButton from './components/WhatsAppButton';
+import logo from './assets/logo.png';
 import { api } from './api';
 
 import Home from './pages/Home';
@@ -29,6 +30,31 @@ function PublicLayout({ children }) {
   );
 }
 
+function NotFound() {
+  return (
+    <div className="section text-center py-32">
+      <motion.img
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        src={logo}
+        alt="VITTA"
+        className="h-16 w-16 mx-auto mb-6 opacity-70"
+      />
+      <h1 className="font-serif text-4xl mb-3">Page not found</h1>
+      <p className="text-bronze/60 mb-8">The page you're looking for doesn't exist or may have moved.</p>
+      <Link to="/" className="btn-primary">← Back to homepage</Link>
+    </div>
+  );
+}
+
+function ScrollToTop() {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }, [location.pathname]);
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
 
@@ -37,46 +63,40 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-        <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-        <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
-        <Route path="/services/:slug" element={<PublicLayout><ServiceDetail /></PublicLayout>} />
-        <Route path="/listings" element={<PublicLayout><Listings /></PublicLayout>} />
-        <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+          <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+          <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
+          <Route path="/services/:slug" element={<PublicLayout><ServiceDetail /></PublicLayout>} />
+          <Route path="/listings" element={<PublicLayout><Listings /></PublicLayout>} />
+          <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
 
-        {/* Private area — secret URL prefix, no public nav links */}
-        <Route path="/vitta-private" element={<Login />} />
-        <Route path="/vitta-private/recovery" element={<RecoveryReset />} />
-        <Route
-          path="/vitta-private/owner"
-          element={
-            <ProtectedRoute requireOwner>
-              <OwnerDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/vitta-private/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+          {/* Private area — secret URL prefix, no public nav links */}
+          <Route path="/vitta-private" element={<Login />} />
+          <Route path="/vitta-private/recovery" element={<RecoveryReset />} />
+          <Route
+            path="/vitta-private/owner"
+            element={
+              <ProtectedRoute requireOwner>
+                <OwnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vitta-private/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="*"
-          element={
-            <PublicLayout>
-              <div className="section text-center">
-                <h1 className="font-serif text-4xl mb-4">Page not found</h1>
-              </div>
-            </PublicLayout>
-          }
-        />
-      </Routes>
-    </AnimatePresence>
+          <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
+        </Routes>
+      </AnimatePresence>
+    </>
   );
 }

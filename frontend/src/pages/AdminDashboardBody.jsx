@@ -26,6 +26,11 @@ function LeadsPanel() {
     load();
   };
 
+  const setFollowUp = async (id, follow_up_date) => {
+    await api.updateLead(id, { follow_up_date });
+    load();
+  };
+
   const remove = async (id) => {
     if (!confirm('Delete this lead?')) return;
     await api.deleteLead(id);
@@ -54,6 +59,17 @@ function LeadsPanel() {
     groups[key].push(l);
   });
 
+  // Same phone number showing up on multiple OPEN (non-closed) enquiries —
+  // likely the same client, worth flagging so admins don't treat them as separate leads.
+  const openPhoneCounts = {};
+  leads.forEach((l) => {
+    if (l.status === 'closed') return;
+    openPhoneCounts[l.phone] = (openPhoneCounts[l.phone] || 0) + 1;
+  });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const isOverdue = (l) => l.follow_up_date && l.follow_up_date < today && l.status !== 'closed';
+
   const STATUS_OPTIONS = ['new', 'contacted', 'in_progress', 'closed'];
 
   const LeadCard = (l) => (
@@ -66,6 +82,16 @@ function LeadsPanel() {
           </p>
           {l.service_interest && <p className="text-xs text-gold mt-1">{l.service_interest}</p>}
           {l.property_title && <p className="text-xs text-bronze/50 mt-1">Property: {l.property_title}</p>}
+          {openPhoneCounts[l.phone] > 1 && (
+            <p className="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5 mt-1.5 w-fit">
+              ⚠ {openPhoneCounts[l.phone]} open enquiries from this number
+            </p>
+          )}
+          {isOverdue(l) && (
+            <p className="text-xs text-red-700 bg-red-100 rounded-full px-2 py-0.5 mt-1.5 w-fit">
+              ⏰ Follow-up overdue ({l.follow_up_date})
+            </p>
+          )}
         </div>
         <select
           value={l.status}
@@ -76,7 +102,16 @@ function LeadsPanel() {
         </select>
       </div>
       {l.message && <p className="text-sm text-bronze/80 mt-3">{l.message}</p>}
-      <button onClick={() => remove(l.id)} className="text-xs text-red-600 mt-3">Delete</button>
+      <div className="flex items-center gap-3 mt-3">
+        <label className="text-xs text-bronze/50">Follow up by:</label>
+        <input
+          type="date"
+          value={l.follow_up_date || ''}
+          onChange={(e) => setFollowUp(l.id, e.target.value)}
+          className="rounded border border-bronze/20 bg-white/70 px-2 py-1 text-xs"
+        />
+        <button onClick={() => remove(l.id)} className="text-xs text-red-600 ml-auto">Delete</button>
+      </div>
     </motion.div>
   );
 
@@ -99,13 +134,17 @@ function LeadsPanel() {
                     <th className="px-4 py-3 font-medium">Email</th>
                     <th className="px-4 py-3 font-medium">Property</th>
                     <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium">Follow up</th>
                     <th className="px-4 py-3 font-medium"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {group.map((l) => (
                     <tr key={l.id} className="border-b border-bronze/5 last:border-0">
-                      <td className="px-4 py-3">{l.name}</td>
+                      <td className="px-4 py-3">
+                        {l.name}
+                        {openPhoneCounts[l.phone] > 1 && <span title="Multiple open enquiries from this number" className="ml-1">⚠</span>}
+                      </td>
                       <td className="px-4 py-3">{l.phone}</td>
                       <td className="px-4 py-3">{l.email || '—'}</td>
                       <td className="px-4 py-3">{l.property_title || '—'}</td>
@@ -117,6 +156,14 @@ function LeadsPanel() {
                         >
                           {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
                         </select>
+                      </td>
+                      <td className="px-4 py-3">
+                        <input
+                          type="date"
+                          value={l.follow_up_date || ''}
+                          onChange={(e) => setFollowUp(l.id, e.target.value)}
+                          className={`rounded border px-2 py-1 text-xs ${isOverdue(l) ? 'border-red-400 bg-red-50' : 'border-bronze/20 bg-white/70'}`}
+                        />
                       </td>
                       <td className="px-4 py-3">
                         <button onClick={() => remove(l.id)} className="text-xs text-red-600">Delete</button>
@@ -444,8 +491,11 @@ function PropertiesPanel() {
     load();
   };
 
-  const remove = async (id) => {
-    if (!confirm('Delete this listing?')) return;
+  const remove = async (id, title) => {
+    const typed = prompt(
+      `This will permanently delete "${title}" and mark any enquiries tied to it as closed.\n\nType DELETE to confirm.`
+    );
+    if (typed !== 'DELETE') return;
     await api.deleteProperty(id);
     load();
   };
@@ -519,7 +569,7 @@ function PropertiesPanel() {
               </div>
               <div className="flex gap-2">
                 <button onClick={() => startEdit(p)} className="btn-outline text-xs py-1.5 px-3">Edit</button>
-                <button onClick={() => remove(p.id)} className="text-xs text-red-600">Delete</button>
+                <button onClick={() => remove(p.id, p.title)} className="text-xs text-red-600">Delete</button>
               </div>
             </div>
           ))}
@@ -536,8 +586,9 @@ function TestimonialsPanel() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyTestimonial);
   const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState(null);
 
-  const load = () => api.getTestimonials().then(setItems).catch(() => {}).finally(() => setLoading(false));
+  const load = () => api.listAllTestimonials().then(setItems).catch(() => {}).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
 
   const submit = async (e) => {
@@ -548,11 +599,63 @@ function TestimonialsPanel() {
     load();
   };
 
+  const approve = async (t) => {
+    await api.updateTestimonial(t.id, { approved: true });
+    load();
+  };
+
+  const saveEdit = async (e) => {
+    e.preventDefault();
+    await api.updateTestimonial(editing.id, {
+      name: editing.name,
+      role: editing.role,
+      quote: editing.quote,
+      rating: Number(editing.rating),
+    });
+    setEditing(null);
+    load();
+  };
+
   const remove = async (id) => {
     if (!confirm('Delete this testimonial?')) return;
     await api.deleteTestimonial(id);
     load();
   };
+
+  const pending = items.filter((t) => !t.approved);
+  const approved = items.filter((t) => t.approved);
+
+  const renderItem = (t) => (
+    <div key={t.id} className="card">
+      {editing?.id === t.id ? (
+        <form onSubmit={saveEdit} className="space-y-2">
+          <input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input value={editing.role || ''} onChange={(e) => setEditing({ ...editing, role: e.target.value })} placeholder="Role/context" className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <textarea value={editing.quote} onChange={(e) => setEditing({ ...editing, quote: e.target.value })} rows={2} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <select value={editing.rating || 5} onChange={(e) => setEditing({ ...editing, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+            {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} star{r === 1 ? '' : 's'}</option>)}
+          </select>
+          <div className="flex gap-3">
+            <button type="submit" className="btn-primary text-sm py-2 px-4">Save</button>
+            <button type="button" onClick={() => setEditing(null)} className="text-sm text-bronze/60">Cancel</button>
+          </div>
+        </form>
+      ) : (
+        <div className="flex justify-between items-start gap-4">
+          <div>
+            <p className="text-sm italic text-bronze/80">"{t.quote}"</p>
+            <p className="text-xs font-semibold mt-2">{t.name} {t.role && `· ${t.role}`}</p>
+            {t.rating && <p className="text-gold text-xs mt-1">{'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}</p>}
+          </div>
+          <div className="flex gap-2 shrink-0">
+            {!t.approved && <button onClick={() => approve(t)} className="btn-outline text-xs py-1.5 px-3">Approve</button>}
+            <button onClick={() => setEditing(t)} className="btn-outline text-xs py-1.5 px-3">Edit</button>
+            <button onClick={() => remove(t.id)} className="text-xs text-red-600">Delete</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div>
@@ -577,18 +680,23 @@ function TestimonialsPanel() {
       {loading ? (
         <p className="text-bronze/60">Loading…</p>
       ) : items.length === 0 ? (
-        <p className="text-bronze/60">No testimonials yet — add one above to show it on the homepage.</p>
+        <p className="text-bronze/60">No testimonials yet.</p>
       ) : (
-        <div className="space-y-3">
-          {items.map((t) => (
-            <div key={t.id} className="card flex justify-between items-start gap-4">
-              <div>
-                <p className="text-sm italic text-bronze/80">"{t.quote}"</p>
-                <p className="text-xs font-semibold mt-2">{t.name} {t.role && `· ${t.role}`}</p>
-              </div>
-              <button onClick={() => remove(t.id)} className="text-xs text-red-600">Delete</button>
+        <div className="space-y-8">
+          {pending.length > 0 && (
+            <div>
+              <h3 className="font-serif text-lg mb-3">Pending review ({pending.length})</h3>
+              <div className="space-y-3">{pending.map(renderItem)}</div>
             </div>
-          ))}
+          )}
+          <div>
+            <h3 className="font-serif text-lg mb-3">Live on site ({approved.length})</h3>
+            {approved.length === 0 ? (
+              <p className="text-sm text-bronze/60">Nothing approved yet.</p>
+            ) : (
+              <div className="space-y-3">{approved.map(renderItem)}</div>
+            )}
+          </div>
         </div>
       )}
     </div>
