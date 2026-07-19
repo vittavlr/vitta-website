@@ -75,7 +75,6 @@ point the start command at `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, a
 
 ## 2. Frontend setup
 
-
 ```bash
 cd frontend
 cp .env.example .env
