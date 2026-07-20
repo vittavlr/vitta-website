@@ -149,3 +149,4 @@ Matches the original plan's beige/linen visual identity:
 - Headers in Playfair Display (serif), body in Lato
 - Framer Motion used throughout: hero fade-ins, staggered value cards, hover-lift service cards,
   page transitions, and animated dashboard panels
+
