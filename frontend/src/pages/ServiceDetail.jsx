@@ -53,7 +53,6 @@ export default function ServiceDetail() {
     setService(null);
     setItems([]);
     setError(false);
-    setImgFailed(false);
     api.getService(slug).then(setService).catch(() => setError(true));
     api.getServiceItems(slug).then(setItems).catch(() => {});
   }, [slug]);
