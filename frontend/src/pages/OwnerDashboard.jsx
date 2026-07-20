@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import CredentialSettings from '../components/CredentialSettings';
+import ProfileEditor from '../components/ProfileEditor';
 import AdminDashboardBody from './AdminDashboardBody';
 
 const TABS = ['Overview', 'Leads', 'Services', 'Properties', 'Testimonials', 'Team', 'Activity', 'Settings'];
@@ -48,7 +49,12 @@ export default function OwnerDashboard() {
       {tab === 'Overview' && <Overview />}
       {tab === 'Team' && <TeamPanel />}
       {tab === 'Activity' && <ActivityPanel />}
-      {tab === 'Settings' && <CredentialSettings />}
+      {tab === 'Settings' && (
+        <>
+          <CredentialSettings />
+          <ProfileEditor />
+        </>
+      )}
       {/* Owner has all admin privileges too — reuse the admin panels for content/lead management */}
       {['Leads', 'Services', 'Properties', 'Testimonials'].includes(tab) && <AdminDashboardBody tab={tab} />}
     </div>

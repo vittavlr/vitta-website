@@ -378,6 +378,7 @@ function ServiceItemsManager({ slug }) {
   const [form, setForm] = useState(emptyServiceItem);
   const [photos, setPhotos] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   const load = () => api.getServiceItems(slug).then(setItems).catch(() => {}).finally(() => setLoading(false));
   useEffect(() => { load(); }, [slug]);
@@ -389,12 +390,33 @@ function ServiceItemsManager({ slug }) {
     setPhotos((prev) => [...prev, ...converted]);
   };
 
+  const removePhoto = (idx) => setPhotos((prev) => prev.filter((_, i) => i !== idx));
+
+  const startCreate = () => {
+    setEditingId(null);
+    setForm(emptyServiceItem);
+    setPhotos([]);
+    setShowForm(true);
+  };
+
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setForm({ title: item.title, description: item.description, link: item.link || '' });
+    setPhotos(item.photos || []);
+    setShowForm(true);
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    await api.createServiceItem(slug, { ...form, photos });
+    if (editingId) {
+      await api.updateServiceItem(editingId, { ...form, photos });
+    } else {
+      await api.createServiceItem(slug, { ...form, photos });
+    }
     setForm(emptyServiceItem);
     setPhotos([]);
     setShowForm(false);
+    setEditingId(null);
     load();
   };
 
@@ -406,12 +428,13 @@ function ServiceItemsManager({ slug }) {
 
   return (
     <div className="mt-4 pt-4 border-t border-bronze/10">
-      <button onClick={() => setShowForm(!showForm)} className="btn-outline text-sm py-1.5 px-4 mb-4">
+      <button onClick={() => (showForm ? setShowForm(false) : startCreate())} className="btn-outline text-sm py-1.5 px-4 mb-4">
         {showForm ? 'Close' : '+ Add Listing'}
       </button>
 
       {showForm && (
         <form onSubmit={submit} className="space-y-3 mb-4">
+          <p className="text-xs font-medium text-bronze/60">{editingId ? 'Editing listing' : 'New listing'}</p>
           <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
@@ -420,11 +443,19 @@ function ServiceItemsManager({ slug }) {
             <input type="file" accept="image/*" multiple onChange={onPhotosSelected} className="text-sm" />
             {photos.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {photos.map((p, i) => <img key={i} src={p} className="w-14 h-14 object-cover rounded-md border border-bronze/20" />)}
+                {photos.map((p, i) => (
+                  <div key={i} className="relative">
+                    <img src={p} className="w-14 h-14 object-cover rounded-md border border-bronze/20" />
+                    <button type="button" onClick={() => removePhoto(i)} className="absolute -top-2 -right-2 bg-white rounded-full w-4 h-4 text-[10px] border border-bronze/20">✕</button>
+                  </div>
+                ))}
               </div>
             )}
           </div>
-          <button type="submit" className="btn-primary text-sm py-2 px-4">Add Listing</button>
+          <div className="flex gap-3">
+            <button type="submit" className="btn-primary text-sm py-2 px-4">{editingId ? 'Save Changes' : 'Add Listing'}</button>
+            <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="text-sm text-bronze/60">Cancel</button>
+          </div>
         </form>
       )}
 
@@ -440,7 +471,10 @@ function ServiceItemsManager({ slug }) {
                 {item.photos?.[0] && <img src={item.photos[0]} className="w-10 h-10 object-cover rounded" />}
                 <span className="text-sm">{item.title}</span>
               </div>
-              <button onClick={() => remove(item.id)} className="text-xs text-red-600">Delete</button>
+              <div className="flex gap-2">
+                <button onClick={() => startEdit(item)} className="text-xs text-gold">Edit</button>
+                <button onClick={() => remove(item.id)} className="text-xs text-red-600">Delete</button>
+              </div>
             </div>
           ))}
         </div>

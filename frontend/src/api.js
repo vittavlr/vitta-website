@@ -35,6 +35,7 @@ export const api = {
   getProperties: () => request('/api/properties'),
   submitLead: (payload) => request('/api/leads', { method: 'POST', body: payload }),
   getPublicContact: () => request('/api/auth/public-contact'),
+  updateProfile: (payload) => request('/api/auth/profile', { method: 'PUT', body: payload, auth: true }),
   recoveryReset: (payload) => request('/api/auth/recovery-reset', { method: 'POST', body: payload }),
   getTestimonials: () => request('/api/testimonials'),
   submitTestimonial: (payload) => request('/api/testimonials/submit', { method: 'POST', body: payload }),

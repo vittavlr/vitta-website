@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import ThemedIllustration from '../components/ThemedIllustration';
+import BackButton from '../components/BackButton';
 import { usePageMeta } from '../usePageMeta';
 
 function FAQAccordion({ faqs }) {
@@ -98,6 +99,7 @@ export default function ServiceDetail() {
           </div>
 
           <div className="section pt-12">
+            <BackButton className="mb-6" />
             <p className="text-lg text-bronze/70 mb-8 max-w-2xl">{service.short_description}</p>
             <div className="card max-w-3xl">
               <p className="leading-relaxed text-bronze/80">{service.full_description}</p>
@@ -105,7 +107,7 @@ export default function ServiceDetail() {
 
             <div className="mt-10">
               <Link
-                to={`/contact?service=${encodeURIComponent(service.title)}`}
+                to={`/enquire?service=${encodeURIComponent(service.title)}`}
                 className="btn-primary"
               >
                 Enquire about {service.title} →
@@ -117,18 +119,26 @@ export default function ServiceDetail() {
                 <h2 className="font-serif text-2xl mb-6">Available under {service.title}</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((item) => (
-                    <div key={item.id} className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]">
+                    <div key={item.id} className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] flex flex-col">
                       {item.photos?.[0] && (
                         <img src={item.photos[0]} alt={item.title} className="w-full h-40 object-cover" />
                       )}
-                      <div className="p-5">
+                      <div className="p-5 flex flex-col flex-1">
                         <h3 className="font-serif text-lg mb-2">{item.title}</h3>
-                        <p className="text-sm text-bronze/70 mb-3 line-clamp-3">{item.description}</p>
-                        {item.link && (
-                          <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-gold text-sm font-semibold hover:underline">
-                            Learn more →
-                          </a>
-                        )}
+                        <p className="text-sm text-bronze/70 mb-3 line-clamp-3 flex-1">{item.description}</p>
+                        <div className="flex items-center justify-between gap-3">
+                          {item.link ? (
+                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-gold text-sm font-semibold hover:underline">
+                              Learn more →
+                            </a>
+                          ) : <span />}
+                          <Link
+                            to={`/enquire?service=${encodeURIComponent(service.title)}&item=${encodeURIComponent(item.title)}`}
+                            className="text-xs bg-gold/10 text-gold rounded-full px-3 py-1.5 font-semibold hover:bg-gold/20"
+                          >
+                            Enquire →
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}

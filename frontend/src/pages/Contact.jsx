@@ -4,15 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import { usePageMeta } from '../usePageMeta';
 import ReviewModal from '../components/ReviewModal';
+import BackButton from '../components/BackButton';
 
 export default function Contact() {
-  usePageMeta('Contact & Enquire', "Tell us what you need — real estate, finance, insurance, legal, or admissions guidance — and we'll get back to you shortly.");
+  usePageMeta('Enquire', "Tell us what you need — real estate, finance, insurance, legal, or admissions guidance — and we'll get back to you shortly.");
   const [searchParams] = useSearchParams();
   const prefilledService = searchParams.get('service') || '';
+  const prefilledItem = searchParams.get('item') || '';
   const prefilledProperty = searchParams.get('property') || '';
   const prefilledPropertyId = searchParams.get('property_id') || '';
   const prefilledLocation = searchParams.get('property_location') || '';
   const prefilledPrice = searchParams.get('property_price') || '';
+
+  const buildInitialMessage = () => {
+    if (prefilledProperty) return `Enquiring about: ${prefilledProperty}`;
+    if (prefilledItem) return `Enquiring about: ${prefilledItem} (${prefilledService})`;
+    return '';
+  };
 
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({
@@ -20,7 +28,7 @@ export default function Contact() {
     email: '',
     phone: '',
     service_interest: prefilledService,
-    message: prefilledProperty ? `Enquiring about: ${prefilledProperty}` : '',
+    message: buildInitialMessage(),
     property_id: prefilledPropertyId || undefined,
     property_title: prefilledProperty || undefined,
   });
@@ -49,7 +57,8 @@ export default function Contact() {
 
   return (
     <div className="section max-w-2xl">
-      <p className="eyebrow mb-3">Contact</p>
+      <BackButton className="mb-6" />
+      <p className="eyebrow mb-3">Enquire</p>
       <h1 className="font-serif text-4xl md:text-5xl mb-4">Let's think it through — together.</h1>
       <p className="text-bronze/70 mb-4">
         Tell us a little about what you need, and we'll get back to you shortly.
@@ -94,6 +103,11 @@ export default function Contact() {
                     {prefilledLocation} {prefilledLocation && prefilledPrice && '·'} {prefilledPrice}
                   </p>
                 )}
+              </div>
+            )}
+            {!prefilledProperty && prefilledItem && (
+              <div className="text-sm bg-fawn rounded-lg px-4 py-3 text-bronze/80">
+                Enquiring about <span className="font-semibold">{prefilledItem}</span> under {prefilledService}
               </div>
             )}
 

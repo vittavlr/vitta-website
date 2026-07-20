@@ -42,6 +42,12 @@ class RecoveryResetRequest(BaseModel):
     new_phone: Optional[str] = None
 
 
+class OwnerProfileUpdate(BaseModel):
+    title: Optional[str] = None  # e.g. "Founder & Principal Advisor"
+    bio: Optional[str] = None
+    photo: Optional[str] = None
+
+
 # ---------- Leads ----------
 class LeadCreate(BaseModel):
     name: str

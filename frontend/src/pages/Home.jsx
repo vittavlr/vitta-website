@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import ServiceCard from '../components/ServiceCard';
 import ThemedIllustration from '../components/ThemedIllustration';
-import { SkeletonGrid } from '../components/Skeleton';
 import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 
@@ -13,22 +11,14 @@ const values = [
   { name: 'Commitment', kind: 'commitment', text: 'We stay with you through the decision, not just the deal.' },
 ];
 
-const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
-function numberWord(n) {
-  return NUMBER_WORDS[n] || String(n);
-}
-
 export default function Home() {
   usePageMeta(
     'Real Estate, Finance & Legal Advisory',
     'One-stop advisory for real estate, finance, insurance, mutual funds, legal counsel and college admissions — thoughtfully guided from Vellore.'
   );
-  const [services, setServices] = useState([]);
-  const [servicesLoading, setServicesLoading] = useState(true);
   const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
-    api.getServices().then(setServices).catch(() => {}).finally(() => setServicesLoading(false));
     api.getTestimonials().then(setTestimonials).catch(() => {});
   }, []);
 
@@ -40,18 +30,8 @@ export default function Home() {
           initial={{ scale: 1.15 }}
           animate={{ scale: 1 }}
           transition={{ duration: 12, ease: 'easeOut' }}
-          className="absolute inset-0 bg-gradient-to-br from-goldlight/40 via-fawn to-bronze/25"
-        >
-          <svg viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice" className="absolute inset-0 w-full h-full text-bronze/15" fill="currentColor">
-            <rect x="40" y="120" width="60" height="180" />
-            <rect x="110" y="80" width="70" height="220" />
-            <rect x="190" y="150" width="50" height="150" />
-            <rect x="600" y="100" width="65" height="200" />
-            <rect x="675" y="140" width="55" height="160" />
-            <rect x="500" y="60" width="80" height="240" />
-            <polygon points="350,300 400,40 450,300" />
-          </svg>
-        </motion.div>
+          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"
+        />
         <div className="absolute inset-0 bg-linen/80" />
         <div className="relative section pt-24 pb-32">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="eyebrow mb-4">
@@ -88,12 +68,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About / Values */}
+      {/* About */}
       <section className="section">
         <p className="eyebrow mb-3">About VITTA</p>
-        <h2 className="font-serif text-3xl md:text-4xl max-w-2xl mb-10">
-          A trusted partner for life's biggest decisions.
+        <h2 className="font-serif text-3xl md:text-4xl max-w-2xl mb-8">
+          Guided decisions, built on trust.
         </h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-2xl text-bronze/80 leading-relaxed mb-6"
+        >
+          VITTA was founded on a simple idea: the biggest decisions in life — where to live, how to
+          invest, how to protect your family, where your children study — deserve one trusted advisor
+          rather than a dozen disconnected ones. We bring real estate, finance, insurance, mutual
+          funds, legal counsel, and college admissions guidance under a single roof.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15 }}
+          className="max-w-2xl text-bronze/80 leading-relaxed mb-12"
+        >
+          Every engagement starts with listening. We take the time to understand your goals and
+          constraints before recommending a path forward — and we stay involved until the decision is
+          made and the paperwork is done.
+        </motion.p>
+
         <div className="grid sm:grid-cols-3 gap-6">
           {values.map((v, i) => (
             <motion.div
@@ -114,26 +117,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services grid */}
-      <section className="bg-fawn/60">
-        <div className="section">
-          <p className="eyebrow mb-3">What we do</p>
-          <h2 className="font-serif text-3xl md:text-4xl max-w-2xl mb-12">
-            {numberWord(services.length)} service{services.length === 1 ? '' : 's'}, one advisor.
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {servicesLoading ? (
-              <SkeletonGrid count={3} />
-            ) : (
-              services.map((s) => <ServiceCard key={s.id} service={s} />)
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="section">
+        <section className="section bg-fawn/60">
           <p className="eyebrow mb-3 text-center">What Clients Say</p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Trusted by families across Vellore.</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -157,7 +143,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
     </div>
   );
 }

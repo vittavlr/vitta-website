@@ -5,7 +5,6 @@ import logo from '../assets/logo.png';
 
 const links = [
   { to: '/', label: 'Home' },
-  { to: '/about', label: 'About' },
   { to: '/services', label: 'Services' },
   { to: '/listings', label: 'Listings' },
   { to: '/contact', label: 'Contact' },
@@ -45,7 +44,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <Link to="/contact" className="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
+        <Link to="/enquire" className="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
           Enquire
         </Link>
 
@@ -68,6 +67,9 @@ export default function Navbar() {
                   {l.label}
                 </NavLink>
               ))}
+              <Link to="/enquire" onClick={() => setOpen(false)} className="btn-primary text-sm py-2.5 px-5 w-fit">
+                Enquire
+              </Link>
             </div>
           </motion.nav>
         )}

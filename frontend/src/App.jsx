@@ -9,21 +9,36 @@ import logo from './assets/logo.png';
 import { api } from './api';
 
 import Home from './pages/Home';
-import About from './pages/About';
 import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
 import Listings from './pages/Listings';
+import ContactInfo from './pages/ContactInfo';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import RecoveryReset from './pages/RecoveryReset';
 import OwnerDashboard from './pages/OwnerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
+const pageVariants = {
+  initial: { opacity: 0, y: 16, scale: 0.99 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -16, scale: 0.99 },
+};
+
 function PublicLayout({ children }) {
   return (
     <>
       <Navbar />
-      <main className="min-h-[60vh]">{children}</main>
+      <motion.main
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="min-h-[60vh]"
+      >
+        {children}
+      </motion.main>
       <Footer />
       <WhatsAppButton />
     </>
@@ -68,11 +83,11 @@ export default function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-          <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
           <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
           <Route path="/services/:slug" element={<PublicLayout><ServiceDetail /></PublicLayout>} />
           <Route path="/listings" element={<PublicLayout><Listings /></PublicLayout>} />
-          <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+          <Route path="/contact" element={<PublicLayout><ContactInfo /></PublicLayout>} />
+          <Route path="/enquire" element={<PublicLayout><Contact /></PublicLayout>} />
 
           {/* Private area — secret URL prefix, no public nav links */}
           <Route path="/vitta-private" element={<Login />} />

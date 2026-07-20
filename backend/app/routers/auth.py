@@ -19,6 +19,7 @@ from app.activity import log_activity
 from app.models import (
     CreateAdminRequest,
     LoginRequest,
+    OwnerProfileUpdate,
     RecoveryResetRequest,
     RequestOtpRequest,
     TokenResponse,
@@ -47,12 +48,29 @@ async def login(payload: LoginRequest):
 
 @router.get("/public-contact")
 async def public_contact():
-    """Public — powers the footer's phone/email links, always reflecting the
-    Owner's current details as changed via Settings."""
+    """Public — powers the footer's and Contact page's details, always
+    reflecting the Owner's current info as changed via Settings/Profile."""
     owner = await users_collection.find_one({"role": "owner"})
     if not owner:
-        return {"phone": None, "email": None}
-    return {"phone": owner.get("phone"), "email": owner.get("email")}
+        return {"phone": None, "email": None, "name": None, "title": None, "bio": None, "photo": None}
+    return {
+        "phone": owner.get("phone"),
+        "email": owner.get("email"),
+        "name": owner.get("name"),
+        "title": owner.get("title"),
+        "bio": owner.get("bio"),
+        "photo": owner.get("photo"),
+    }
+
+
+@router.put("/profile")
+async def update_owner_profile(payload: OwnerProfileUpdate, owner: dict = Depends(require_owner)):
+    """Owner-only — sets the title/bio/photo shown on the public Contact page."""
+    update = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if not update:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    await users_collection.update_one({"_id": owner["_id"]}, {"$set": update})
+    return {"message": "Profile updated"}
 
 
 @router.post("/recovery-reset")

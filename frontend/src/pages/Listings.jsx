@@ -36,7 +36,7 @@ export default function Listings() {
       property_price: p.price || '',
       service: 'Real Estate',
     });
-    navigate(`/contact?${params.toString()}`);
+    navigate(`/enquire?${params.toString()}`);
   };
 
   return (
