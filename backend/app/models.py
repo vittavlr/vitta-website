@@ -98,6 +98,7 @@ class ServiceItemBase(BaseModel):
     description: str
     photos: List[str] = []
     link: Optional[str] = None
+    map_link: Optional[str] = None
 
 
 class ServiceItemUpdate(BaseModel):
@@ -105,6 +106,7 @@ class ServiceItemUpdate(BaseModel):
     description: Optional[str] = None
     photos: Optional[List[str]] = None
     link: Optional[str] = None
+    map_link: Optional[str] = None
 
 
 # ---------- Testimonials ----------
@@ -141,6 +143,8 @@ class PropertyBase(BaseModel):
     images: List[str] = []
     status: str = "available"  # available, sold, coming_soon
     featured: bool = False
+    map_link: Optional[str] = None
+    external_link: Optional[str] = None
 
 
 class PropertyUpdate(BaseModel):
@@ -155,3 +159,5 @@ class PropertyUpdate(BaseModel):
     images: Optional[List[str]] = None
     status: Optional[str] = None
     featured: Optional[bool] = None
+    map_link: Optional[str] = None
+    external_link: Optional[str] = None

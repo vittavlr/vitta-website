@@ -370,7 +370,7 @@ function ServicesPanel() {
 }
 
 
-const emptyServiceItem = { title: '', description: '', link: '' };
+const emptyServiceItem = { title: '', description: '', link: '', map_link: '' };
 
 function ServiceItemsManager({ slug }) {
   const [items, setItems] = useState([]);
@@ -401,7 +401,7 @@ function ServiceItemsManager({ slug }) {
 
   const startEdit = (item) => {
     setEditingId(item.id);
-    setForm({ title: item.title, description: item.description, link: item.link || '' });
+    setForm({ title: item.title, description: item.description, link: item.link || '', map_link: item.map_link || '' });
     setPhotos(item.photos || []);
     setShowForm(true);
   };
@@ -438,6 +438,7 @@ function ServiceItemsManager({ slug }) {
           <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input placeholder="Google Maps link (optional)" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <div>
             <label className="text-sm font-medium block mb-1">Photos</label>
             <input type="file" accept="image/*" multiple onChange={onPhotosSelected} className="text-sm" />
@@ -486,6 +487,7 @@ function ServiceItemsManager({ slug }) {
 const emptyProperty = {
   title: '', location: '', price: '', property_type: 'apartment', description: '',
   bedrooms: '', bathrooms: '', area_sqft: '', status: 'available', featured: false,
+  map_link: '', external_link: '',
 };
 
 
@@ -529,6 +531,7 @@ function PropertiesPanel() {
       property_type: p.property_type || 'apartment', description: p.description,
       bedrooms: p.bedrooms ?? '', bathrooms: p.bathrooms ?? '', area_sqft: p.area_sqft ?? '',
       status: p.status, featured: p.featured,
+      map_link: p.map_link || '', external_link: p.external_link || '',
     });
     setPhotos(p.images || []);
     setShowForm(true);
@@ -603,6 +606,11 @@ function PropertiesPanel() {
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input placeholder="Google Maps link (optional)" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+            <input placeholder="Website/reference link (optional)" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           </div>
 
           <label className="flex items-center gap-2 text-sm">

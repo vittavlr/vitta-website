@@ -93,7 +93,6 @@ export default function ServiceDetail() {
             )}
             <div className="absolute inset-0 bg-linen/80" />
             <div className="relative section flex flex-col justify-end h-full pb-8">
-              <Link to="/services" className="text-sm text-gold hover:underline mb-3 w-fit">← All services</Link>
               <h1 className="font-serif text-4xl md:text-5xl">{service.title}</h1>
             </div>
           </div>
@@ -119,22 +118,36 @@ export default function ServiceDetail() {
                 <h2 className="font-serif text-2xl mb-6">Available under {service.title}</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((item) => (
-                    <div key={item.id} className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] flex flex-col">
+                    <div
+                      key={item.id}
+                      onClick={() => item.link && window.open(item.link, '_blank', 'noopener,noreferrer')}
+                      className={`rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] flex flex-col ${item.link ? 'cursor-pointer hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)] transition-shadow' : ''}`}
+                    >
                       {item.photos?.[0] && (
                         <img src={item.photos[0]} alt={item.title} className="w-full h-40 object-cover" />
                       )}
                       <div className="p-5 flex flex-col flex-1">
                         <h3 className="font-serif text-lg mb-2">{item.title}</h3>
                         <p className="text-sm text-bronze/70 mb-3 line-clamp-3 flex-1">{item.description}</p>
-                        <div className="flex items-center justify-between gap-3">
-                          {item.link ? (
-                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-gold text-sm font-semibold hover:underline">
-                              Learn more →
+                        <div className="flex items-center flex-wrap gap-2">
+                          {item.link && (
+                            <span className="text-gold text-xs font-semibold">Visit link →</span>
+                          )}
+                          {item.map_link && (
+                            <a
+                              href={item.map_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-xs bg-fawn text-bronze/70 rounded-full px-3 py-1.5 font-semibold hover:bg-fawn/70"
+                            >
+                              📍 Map
                             </a>
-                          ) : <span />}
+                          )}
                           <Link
                             to={`/enquire?service=${encodeURIComponent(service.title)}&item=${encodeURIComponent(item.title)}`}
-                            className="text-xs bg-gold/10 text-gold rounded-full px-3 py-1.5 font-semibold hover:bg-gold/20"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs bg-gold/10 text-gold rounded-full px-3 py-1.5 font-semibold hover:bg-gold/20 ml-auto"
                           >
                             Enquire →
                           </Link>

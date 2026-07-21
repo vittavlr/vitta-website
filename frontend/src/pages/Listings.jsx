@@ -167,10 +167,33 @@ export default function Listings() {
 
                 <p className="text-bronze/80 leading-relaxed mb-6">{selected.description}</p>
 
-                <div className="flex gap-3 no-print">
+                {selected.map_link && (
+                  <div className="rounded-xl overflow-hidden border border-bronze/10 h-40 mb-6">
+                    <iframe
+                      title={`${selected.title} location`}
+                      src={selected.map_link.includes('output=embed') ? selected.map_link : `https://www.google.com/maps?q=${encodeURIComponent(selected.map_link)}&output=embed`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-3 no-print">
                   <button onClick={() => enquireAbout(selected)} className="btn-primary">
                     Enquire about this property →
                   </button>
+                  {selected.map_link && (
+                    <a href={selected.map_link} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                      📍 View on Map
+                    </a>
+                  )}
+                  {selected.external_link && (
+                    <a href={selected.external_link} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                      🔗 Visit Link
+                    </a>
+                  )}
                   <button onClick={() => window.print()} className="btn-outline">
                     🖨 Print
                   </button>
