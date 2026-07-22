@@ -17,9 +17,11 @@ export default function Home() {
     'One-stop advisory for real estate, finance, insurance, mutual funds, legal counsel and college admissions — thoughtfully guided from Vellore.'
   );
   const [testimonials, setTestimonials] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
     api.getTestimonials().then(setTestimonials).catch(() => {});
+    api.getAnnouncements().then(setAnnouncements).catch(() => {});
   }, []);
 
   return (
@@ -116,6 +118,42 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Announcements */}
+      {announcements.length > 0 && (
+        <section className="section">
+          <p className="eyebrow mb-3">Latest</p>
+          <h2 className="font-serif text-3xl md:text-4xl mb-10">Announcements</h2>
+          <div className="space-y-4 max-w-3xl">
+            {announcements.map((a, i) => (
+              <motion.div
+                key={a.id}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="card flex items-start gap-4"
+              >
+                <span className="w-2 h-2 rounded-full bg-gold mt-2 shrink-0" />
+                <div className="flex-1">
+                  <p className="font-semibold text-sm">{a.title}</p>
+                  <p className="text-sm text-bronze/70 mt-1">{a.message}</p>
+                  {a.link && (
+                    <Link to={a.link} className="text-gold text-xs font-semibold hover:underline mt-2 inline-block">
+                      View →
+                    </Link>
+                  )}
+                </div>
+                {a.created_at && (
+                  <span className="text-xs text-bronze/40 whitespace-nowrap">
+                    {new Date(a.created_at).toLocaleDateString()}
+                  </span>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Testimonials */}
       {testimonials.length > 0 && (

@@ -10,6 +10,7 @@ export default function AdminDashboardBody({ tab }) {
       {tab === 'Services' && <ServicesPanel />}
       {tab === 'Properties' && <PropertiesPanel />}
       {tab === 'Testimonials' && <TestimonialsPanel />}
+      {tab === 'Announcements' && <AnnouncementsPanel />}
     </>
   );
 }
@@ -769,6 +770,71 @@ function TestimonialsPanel() {
               <div className="space-y-3">{approved.map(renderItem)}</div>
             )}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const emptyAnnouncement = { title: '', message: '', link: '' };
+
+function AnnouncementsPanel() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState(emptyAnnouncement);
+  const [showForm, setShowForm] = useState(false);
+
+  const load = () => api.getAnnouncements().then(setItems).catch(() => {}).finally(() => setLoading(false));
+  useEffect(() => { load(); }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    await api.createAnnouncement({ ...form, link: form.link || null });
+    setForm(emptyAnnouncement);
+    setShowForm(false);
+    load();
+  };
+
+  const remove = async (id) => {
+    if (!confirm('Delete this announcement?')) return;
+    await api.deleteAnnouncement(id);
+    load();
+  };
+
+  return (
+    <div>
+      <p className="text-sm text-bronze/60 mb-4">
+        New services and property listings post here automatically. You can also add your own.
+      </p>
+      <button onClick={() => setShowForm(!showForm)} className="btn-primary text-sm py-2 px-4 mb-6">
+        {showForm ? 'Close' : '+ Add Announcement'}
+      </button>
+
+      {showForm && (
+        <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
+          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Message" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input placeholder="Link (optional, e.g. /services/finance)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <button type="submit" className="btn-primary text-sm py-2 px-4">Post Announcement</button>
+        </motion.form>
+      )}
+
+      {loading ? (
+        <p className="text-bronze/60">Loading…</p>
+      ) : items.length === 0 ? (
+        <p className="text-bronze/60">No announcements yet.</p>
+      ) : (
+        <div className="space-y-3">
+          {items.map((a) => (
+            <div key={a.id} className="card flex justify-between items-start gap-4">
+              <div>
+                <p className="text-sm font-semibold">{a.title}</p>
+                <p className="text-sm text-bronze/70 mt-1">{a.message}</p>
+                {a.created_at && <p className="text-xs text-bronze/40 mt-1">{new Date(a.created_at).toLocaleString()}</p>}
+              </div>
+              <button onClick={() => remove(a.id)} className="text-xs text-red-600 shrink-0">Delete</button>
+            </div>
+          ))}
         </div>
       )}
     </div>

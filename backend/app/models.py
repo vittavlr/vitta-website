@@ -130,6 +130,13 @@ class PageViewCreate(BaseModel):
     path: str
 
 
+# ---------- Announcements ----------
+class AnnouncementBase(BaseModel):
+    title: str
+    message: str
+    link: Optional[str] = None
+
+
 # ---------- Properties ----------
 class PropertyBase(BaseModel):
     title: str

@@ -5,6 +5,7 @@ from app.auth import require_admin
 from app.database import leads_collection, properties_collection
 from app.models import PropertyBase, PropertyUpdate
 from app.activity import log_activity
+from app.routers.announcements import post_announcement
 
 router = APIRouter(prefix="/api/properties", tags=["properties"])
 
@@ -33,6 +34,7 @@ async def get_property(property_id: str):
 @router.post("")
 async def create_property(payload: PropertyBase, admin: dict = Depends(require_admin)):
     result = await properties_collection.insert_one(payload.model_dump())
+    await post_announcement("New Listing", f"A new property is now listed: {payload.title} in {payload.location}.", "/listings")
     return {"message": "Property added", "id": str(result.inserted_id)}
 
 

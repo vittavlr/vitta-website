@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import CredentialSettings from '../components/CredentialSettings';
 import AdminDashboardBody from './AdminDashboardBody';
 
-const TABS = ['Leads', 'Services', 'Properties', 'Testimonials', 'Settings'];
+const TABS = ['Leads', 'Services', 'Properties', 'Testimonials', 'Announcements', 'Settings'];
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();

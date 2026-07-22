@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import WhatsAppButton from './components/WhatsAppButton';
+import ChatBot from './components/ChatBot';
 import logo from './assets/logo.png';
 import { api } from './api';
 
@@ -41,6 +42,7 @@ function PublicLayout({ children }) {
       </motion.main>
       <Footer />
       <WhatsAppButton />
+      <ChatBot />
     </>
   );
 }

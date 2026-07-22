@@ -7,7 +7,7 @@ import CredentialSettings from '../components/CredentialSettings';
 import ProfileEditor from '../components/ProfileEditor';
 import AdminDashboardBody from './AdminDashboardBody';
 
-const TABS = ['Overview', 'Leads', 'Services', 'Properties', 'Testimonials', 'Team', 'Activity', 'Settings'];
+const TABS = ['Overview', 'Leads', 'Services', 'Properties', 'Testimonials', 'Announcements', 'Team', 'Activity', 'Settings'];
 
 export default function OwnerDashboard() {
   const { user, logout } = useAuth();
@@ -56,7 +56,7 @@ export default function OwnerDashboard() {
         </>
       )}
       {/* Owner has all admin privileges too — reuse the admin panels for content/lead management */}
-      {['Leads', 'Services', 'Properties', 'Testimonials'].includes(tab) && <AdminDashboardBody tab={tab} />}
+      {['Leads', 'Services', 'Properties', 'Testimonials', 'Announcements'].includes(tab) && <AdminDashboardBody tab={tab} />}
     </div>
   );
 }

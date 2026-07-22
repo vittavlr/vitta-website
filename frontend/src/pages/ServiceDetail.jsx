@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import ThemedIllustration from '../components/ThemedIllustration';
@@ -44,6 +44,7 @@ function FAQAccordion({ faqs }) {
 
 export default function ServiceDetail() {
   const { slug } = useParams();
+  if (slug === 'real-estate') return <Navigate to="/listings" replace />;
   const [service, setService] = useState(null);
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);

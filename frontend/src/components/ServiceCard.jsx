@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import ThemedIllustration from './ThemedIllustration';
 
 export default function ServiceCard({ service }) {
+  const target = service.slug === 'real-estate' ? '/listings' : `/services/${service.slug}`;
   return (
-    <Link to={`/services/${service.slug}`} className="block h-full">
+    <Link to={target} className="block h-full">
       <motion.div
         whileHover={{ y: -8 }}
         transition={{ type: 'spring', stiffness: 250, damping: 20 }}

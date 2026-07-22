@@ -45,6 +45,9 @@ export const api = {
   deleteTestimonial: (id) => request(`/api/testimonials/${id}`, { method: 'DELETE', auth: true }),
   trackPageview: (path) => request('/api/analytics/pageview', { method: 'POST', body: { path } }).catch(() => {}),
   getAnalyticsSummary: () => request('/api/analytics/summary', { auth: true }),
+  getAnnouncements: () => request('/api/announcements'),
+  createAnnouncement: (payload) => request('/api/announcements', { method: 'POST', body: payload, auth: true }),
+  deleteAnnouncement: (id) => request(`/api/announcements/${id}`, { method: 'DELETE', auth: true }),
 
   // Owner
   createAdmin: (payload) => request('/api/auth/create-admin', { method: 'POST', body: payload, auth: true }),

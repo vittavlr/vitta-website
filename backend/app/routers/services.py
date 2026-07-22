@@ -5,6 +5,7 @@ from app.auth import require_admin
 from app.database import service_items_collection, services_collection
 from app.models import ServiceBase, ServiceItemBase, ServiceItemUpdate, ServiceUpdate
 from app.activity import log_activity
+from app.routers.announcements import post_announcement
 
 router = APIRouter(prefix="/api/services", tags=["services"])
 
@@ -37,6 +38,7 @@ async def create_service(payload: ServiceBase, admin: dict = Depends(require_adm
         raise HTTPException(status_code=400, detail="A service with this slug already exists")
     result = await services_collection.insert_one(payload.model_dump())
     await log_activity(admin["email"], f"Created service '{payload.title}'")
+    await post_announcement("New Service", f"We've added a new service: {payload.title}.", f"/services/{payload.slug}")
     return {"message": "Service created", "id": str(result.inserted_id)}
 
 
