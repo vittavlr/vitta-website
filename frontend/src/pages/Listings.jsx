@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { SkeletonGrid } from '../components/Skeleton';
 import { usePageMeta } from '../usePageMeta';
+import { buildMapUrls } from '../mapUtils';
 
 export default function Listings() {
   usePageMeta('Property Listings', 'Personally verified homes and investments — title, encumbrance, valuation and access all checked.');
@@ -171,7 +172,7 @@ export default function Listings() {
                   <div className="rounded-xl overflow-hidden border border-bronze/10 h-40 mb-6">
                     <iframe
                       title={`${selected.title} location`}
-                      src={selected.map_link.includes('output=embed') ? selected.map_link : `https://www.google.com/maps?q=${encodeURIComponent(selected.map_link)}&output=embed`}
+                      src={buildMapUrls(selected.map_link).embedUrl}
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -185,7 +186,7 @@ export default function Listings() {
                     Enquire about this property →
                   </button>
                   {selected.map_link && (
-                    <a href={selected.map_link} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                    <a href={buildMapUrls(selected.map_link).viewUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">
                       📍 View on Map
                     </a>
                   )}

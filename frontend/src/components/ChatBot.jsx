@@ -86,6 +86,30 @@ export default function ChatBot() {
     }, 350);
   };
 
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setMessages((prev) => [...prev, { from: 'bot', text: 'Voice input is not supported in this browser — try typing instead.' }]);
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onstart = () => setListening(true);
+    recognition.onend = () => setListening(false);
+    recognition.onerror = () => setListening(false);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+    };
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
   return (
     <>
       <motion.button
@@ -141,6 +165,14 @@ export default function ChatBot() {
             </div>
 
             <form onSubmit={send} className="flex items-center gap-2 p-3 border-t border-white/40">
+              <button
+                type="button"
+                onClick={startListening}
+                title="Speak your question"
+                className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm border ${listening ? 'bg-red-100 border-red-300 animate-pulse' : 'border-bronze/20 bg-white/70'}`}
+              >
+                🎤
+              </button>
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}

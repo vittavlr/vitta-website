@@ -5,6 +5,7 @@ import { api } from '../api';
 import ThemedIllustration from '../components/ThemedIllustration';
 import BackButton from '../components/BackButton';
 import { usePageMeta } from '../usePageMeta';
+import { buildMapUrls } from '../mapUtils';
 
 function FAQAccordion({ faqs }) {
   const [openIdx, setOpenIdx] = useState(null);
@@ -136,7 +137,7 @@ export default function ServiceDetail() {
                           )}
                           {item.map_link && (
                             <a
-                              href={item.map_link}
+                              href={buildMapUrls(item.map_link).viewUrl}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}

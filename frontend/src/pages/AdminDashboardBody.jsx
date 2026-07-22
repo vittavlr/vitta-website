@@ -256,6 +256,13 @@ function ServicesPanel() {
     }
   };
 
+  const removeService = async (id, title) => {
+    const typed = prompt(`This will permanently delete "${title}" and any listings under it.\n\nType DELETE to confirm.`);
+    if (typed !== 'DELETE') return;
+    await api.deleteService(id);
+    load();
+  };
+
   if (loading) return <p className="text-bronze/60">Loading services…</p>;
 
   return (
@@ -359,6 +366,7 @@ function ServicesPanel() {
                     {managingItems === s.slug ? 'Close Listings' : 'Manage Listings'}
                   </button>
                   <button onClick={() => setEditing(s)} className="btn-outline text-sm py-1.5 px-4">Edit</button>
+                  <button onClick={() => removeService(s.id, s.title)} className="text-xs text-red-600">Delete</button>
                 </div>
               </div>
             )}
@@ -439,7 +447,7 @@ function ServiceItemsManager({ slug }) {
           <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <input placeholder="Google Maps link (optional)" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           <div>
             <label className="text-sm font-medium block mb-1">Photos</label>
             <input type="file" accept="image/*" multiple onChange={onPhotosSelected} className="text-sm" />
@@ -610,7 +618,7 @@ function PropertiesPanel() {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3">
-            <input placeholder="Google Maps link (optional)" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+            <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
             <input placeholder="Website/reference link (optional)" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           </div>
 

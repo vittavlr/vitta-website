@@ -56,11 +56,20 @@ async def update_service(service_id: str, payload: ServiceUpdate, admin: dict = 
 
 @router.delete("/{service_id}")
 async def delete_service(service_id: str, admin: dict = Depends(require_admin)):
+    service = await services_collection.find_one({"_id": ObjectId(service_id)})
     result = await services_collection.delete_one({"_id": ObjectId(service_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Service not found")
-    await log_activity(admin["email"], f"Deleted service (id {service_id})")
-    return {"message": "Service deleted"}
+    removed_items = 0
+    if service:
+        del_items = await service_items_collection.delete_many({"service_slug": service["slug"]})
+        removed_items = del_items.deleted_count
+    await log_activity(
+        admin["email"],
+        f"Deleted service '{service['title'] if service else service_id}'"
+        + (f" and {removed_items} listing(s) under it" if removed_items else ""),
+    )
+    return {"message": "Service deleted", "listings_removed": removed_items}
 
 
 # ---------- Service listings (specific offerings under a service) ----------
