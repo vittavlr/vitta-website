@@ -47,5 +47,26 @@ h1, h2, h3, h4, .font-display {
   .print-area {
     box-shadow: none !important;
     border: none !important;
+    position: relative;
+  }
+  .print-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 260px;
+    transform: translate(-50%, -50%);
+    opacity: 0.06;
+    object-fit: contain;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .print-letterhead-header,
+  .print-letterhead-footer {
+    position: relative;
+    z-index: 1;
+  }
+  @page {
+    margin: 1.5cm;
   }
 }

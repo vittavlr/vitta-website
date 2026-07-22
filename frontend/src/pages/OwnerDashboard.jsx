@@ -75,10 +75,12 @@ function Overview() {
   ];
 
   const byService = stats?.by_service || [];
-  const maxCount = Math.max(1, ...byService.map((s) => s.count));
-
   const byProperty = stats?.by_property || [];
-  const maxPropertyCount = Math.max(1, ...byProperty.map((p) => p.count));
+  const combined = [
+    ...byService.map((s) => ({ label: s.service, count: s.count, type: 'service' })),
+    ...byProperty.map((p) => ({ label: `🏠 ${p.property}`, count: p.count, type: 'property' })),
+  ].sort((a, b) => b.count - a.count);
+  const maxCombined = Math.max(1, ...combined.map((c) => c.count));
 
   const downloadCsv = async () => {
     const blob = await api.exportLeadsCsv();
@@ -112,49 +114,24 @@ function Overview() {
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
-        <h3 className="font-serif text-xl mb-5">Inquiries by service</h3>
-        {byService.length === 0 ? (
+        <h3 className="font-serif text-xl mb-1">Inquiries by service &amp; property</h3>
+        <p className="text-xs text-bronze/50 mb-5">🏠 marks a specific property inquiry; the rest are service inquiries.</p>
+        {combined.length === 0 ? (
           <p className="text-sm text-bronze/60">No inquiries yet.</p>
         ) : (
           <div className="space-y-3">
-            {byService.map((s) => (
-              <div key={s.service}>
+            {combined.map((c) => (
+              <div key={c.label}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-bronze/80">{s.service}</span>
-                  <span className="text-bronze/50">{s.count}</span>
+                  <span className="text-bronze/80">{c.label}</span>
+                  <span className="text-bronze/50">{c.count}</span>
                 </div>
                 <div className="h-2.5 rounded-full bg-fawn overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: `${(s.count / maxCount) * 100}%` }}
+                    animate={{ width: `${(c.count / maxCombined) * 100}%` }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className="h-full bg-gradient-to-r from-goldlight to-gold rounded-full"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card">
-        <h3 className="font-serif text-xl mb-5">Inquiries by property</h3>
-        {byProperty.length === 0 ? (
-          <p className="text-sm text-bronze/60">No property-specific inquiries yet.</p>
-        ) : (
-          <div className="space-y-3">
-            {byProperty.map((p) => (
-              <div key={p.property}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-bronze/80">{p.property}</span>
-                  <span className="text-bronze/50">{p.count}</span>
-                </div>
-                <div className="h-2.5 rounded-full bg-fawn overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(p.count / maxPropertyCount) * 100}%` }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className="h-full bg-gradient-to-r from-bronze/60 to-bronze rounded-full"
+                    className={`h-full rounded-full bg-gradient-to-r ${c.type === 'property' ? 'from-bronze/60 to-bronze' : 'from-goldlight to-gold'}`}
                   />
                 </div>
               </div>

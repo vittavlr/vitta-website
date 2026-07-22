@@ -5,6 +5,7 @@ import { api } from '../api';
 import { SkeletonGrid } from '../components/Skeleton';
 import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
+import logo from '../assets/logo.png';
 
 export default function Listings() {
   usePageMeta('Property Listings', 'Personally verified homes and investments — title, encumbrance, valuation and access all checked.');
@@ -13,6 +14,7 @@ export default function Listings() {
   const [selected, setSelected] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [contact, setContact] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +23,7 @@ export default function Listings() {
       .then(setProperties)
       .catch(() => {})
       .finally(() => setLoading(false));
+    api.getPublicContact().then(setContact).catch(() => {});
   }, []);
 
   const openProperty = (p) => {
@@ -118,6 +121,22 @@ export default function Listings() {
               onClick={(e) => e.stopPropagation()}
               className="bg-linen rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto print-area"
             >
+              {/* Print-only letterhead: header, watermark, footer — hidden on screen */}
+              <div className="hidden print:flex print-letterhead-header items-center gap-3 pb-3 mb-4 border-b-2 border-bronze/30">
+                <img src={logo} alt="VITTA" className="h-10 w-10 object-contain" />
+                <div>
+                  <p className="font-serif text-lg leading-tight">VITTA</p>
+                  <p className="text-[10px] tracking-widest uppercase text-bronze/60">Builders &amp; Consultancy</p>
+                </div>
+                <div className="ml-auto text-right text-[10px] text-bronze/60 leading-tight">
+                  {contact.phone && <p>{contact.phone}</p>}
+                  {contact.email && <p>{contact.email}</p>}
+                  <p>Vellore, Tamil Nadu, India</p>
+                </div>
+              </div>
+
+              <img src={logo} alt="" className="hidden print:block print-watermark" />
+
               {selected.images?.length > 0 && (
                 <div className="relative overflow-hidden bg-black">
                   <motion.img
@@ -198,6 +217,10 @@ export default function Listings() {
                   <button onClick={() => window.print()} className="btn-outline">
                     🖨 Print
                   </button>
+                </div>
+
+                <div className="hidden print:block print-letterhead-footer mt-6 pt-3 border-t border-bronze/30 text-[10px] text-bronze/60 text-center">
+                  VITTA Builders &amp; Consultancy — {contact.phone || ''} {contact.phone && contact.email && '·'} {contact.email || ''} — Vellore, Tamil Nadu, India
                 </div>
               </div>
             </motion.div>
