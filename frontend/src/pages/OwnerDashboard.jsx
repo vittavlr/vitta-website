@@ -115,27 +115,31 @@ function Overview() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
         <h3 className="font-serif text-xl mb-1">Inquiries by service &amp; property</h3>
-        <p className="text-xs text-bronze/50 mb-5">🏠 marks a specific property inquiry; the rest are service inquiries.</p>
+        <p className="text-xs text-bronze/50 mb-6">🏠 marks a specific property inquiry; the rest are service inquiries.</p>
         {combined.length === 0 ? (
           <p className="text-sm text-bronze/60">No inquiries yet.</p>
         ) : (
-          <div className="space-y-3">
-            {combined.map((c) => (
-              <div key={c.label}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-bronze/80">{c.label}</span>
-                  <span className="text-bronze/50">{c.count}</span>
-                </div>
-                <div className="h-2.5 rounded-full bg-fawn overflow-hidden">
+          <div className="overflow-x-auto">
+            <div className="flex items-end gap-4 h-56 min-w-max px-2 border-b border-bronze/20 pb-0">
+              {combined.map((c, i) => (
+                <div key={c.label} className="flex flex-col items-center justify-end h-full w-14 shrink-0">
+                  <span className="text-xs text-bronze/60 mb-1">{c.count}</span>
                   <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(c.count / maxCombined) * 100}%` }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className={`h-full rounded-full bg-gradient-to-r ${c.type === 'property' ? 'from-bronze/60 to-bronze' : 'from-goldlight to-gold'}`}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${Math.max((c.count / maxCombined) * 100, 6)}%` }}
+                    transition={{ duration: 0.7, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                    className={`w-8 rounded-t-md bg-gradient-to-t ${c.type === 'property' ? 'from-bronze to-bronze/50' : 'from-gold to-goldlight'}`}
                   />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="flex items-start gap-4 min-w-max px-2 mt-2">
+              {combined.map((c) => (
+                <div key={c.label} className="w-14 shrink-0 text-center">
+                  <span className="text-[10px] text-bronze/60 leading-tight break-words">{c.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </motion.div>
