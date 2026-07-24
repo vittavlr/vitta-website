@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -76,11 +76,8 @@ function Overview() {
 
   const byService = stats?.by_service || [];
   const byProperty = stats?.by_property || [];
-  const combined = [
-    ...byService.map((s) => ({ label: s.service, count: s.count, type: 'service' })),
-    ...byProperty.map((p) => ({ label: `🏠 ${p.property}`, count: p.count, type: 'property' })),
-  ].sort((a, b) => b.count - a.count);
-  const maxCombined = Math.max(1, ...combined.map((c) => c.count));
+  const maxCount = Math.max(1, ...byService.map((s) => s.count));
+  const [hoveredBar, setHoveredBar] = useState(null);
 
   const downloadCsv = async () => {
     const blob = await api.exportLeadsCsv();
@@ -114,29 +111,65 @@ function Overview() {
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
-        <h3 className="font-serif text-xl mb-1">Inquiries by service &amp; property</h3>
-        <p className="text-xs text-bronze/50 mb-6">🏠 marks a specific property inquiry; the rest are service inquiries.</p>
-        {combined.length === 0 ? (
+        <h3 className="font-serif text-xl mb-1">Inquiries by service</h3>
+        <p className="text-xs text-bronze/50 mb-6">Hover a bar for details — Real Estate breaks down by property.</p>
+        {byService.length === 0 ? (
           <p className="text-sm text-bronze/60">No inquiries yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <div className="flex items-end gap-4 h-56 min-w-max px-2 border-b border-bronze/20 pb-0">
-              {combined.map((c, i) => (
-                <div key={c.label} className="flex flex-col items-center justify-end h-full w-14 shrink-0">
-                  <span className="text-xs text-bronze/60 mb-1">{c.count}</span>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: `${Math.max((c.count / maxCombined) * 100, 6)}%` }}
-                    transition={{ duration: 0.7, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                    className={`w-8 rounded-t-md bg-gradient-to-t ${c.type === 'property' ? 'from-bronze to-bronze/50' : 'from-gold to-goldlight'}`}
-                  />
-                </div>
-              ))}
+              {byService.map((s, i) => {
+                const isRealEstate = s.service.toLowerCase() === 'real estate';
+                return (
+                  <div
+                    key={s.service}
+                    className="relative flex flex-col items-center justify-end h-full w-16 shrink-0"
+                    onMouseEnter={() => setHoveredBar(s.service)}
+                    onMouseLeave={() => setHoveredBar(null)}
+                  >
+                    <AnimatePresence>
+                      {hoveredBar === s.service && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          className="absolute bottom-full mb-2 z-10 w-48 card p-3 text-left pointer-events-none"
+                        >
+                          {isRealEstate ? (
+                            byProperty.length > 0 ? (
+                              <>
+                                <p className="text-xs font-semibold mb-1">By property:</p>
+                                {byProperty.map((p) => (
+                                  <div key={p.property} className="flex justify-between text-xs text-bronze/70">
+                                    <span className="truncate mr-2">{p.property}</span>
+                                    <span>{p.count}</span>
+                                  </div>
+                                ))}
+                              </>
+                            ) : (
+                              <p className="text-xs text-bronze/60">No property-specific inquiries yet.</p>
+                            )
+                          ) : (
+                            <p className="text-xs text-bronze/70">{s.count} inquiry{s.count === 1 ? '' : 'ies'} for {s.service}.</p>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <span className="text-xs text-bronze/60 mb-1">{s.count}</span>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${Math.max((s.count / maxCount) * 100, 6)}%` }}
+                      transition={{ duration: 0.7, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                      className="w-8 rounded-t-md bg-gradient-to-t from-gold to-goldlight cursor-default"
+                    />
+                  </div>
+                );
+              })}
             </div>
             <div className="flex items-start gap-4 min-w-max px-2 mt-2">
-              {combined.map((c) => (
-                <div key={c.label} className="w-14 shrink-0 text-center">
-                  <span className="text-[10px] text-bronze/60 leading-tight break-words">{c.label}</span>
+              {byService.map((s) => (
+                <div key={s.service} className="w-16 shrink-0 text-center">
+                  <span className="text-[10px] text-bronze/60 leading-tight break-words">{s.service}</span>
                 </div>
               ))}
             </div>

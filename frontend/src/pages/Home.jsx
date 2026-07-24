@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ThemedIllustration from '../components/ThemedIllustration';
 import AnnouncementsPopup from '../components/AnnouncementsPopup';
+import Counter from '../components/Counter';
 import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 
@@ -12,15 +13,25 @@ const values = [
   { name: 'Commitment', kind: 'commitment', text: 'We stay with you through the decision, not just the deal.' },
 ];
 
+const process = [
+  { step: '1', title: 'Tell us your need', text: 'Share your goal — buying a home, planning finances, or anything in between.', kind: 'transparency' },
+  { step: '2', title: 'We assess & advise', text: 'Our team reviews your situation and lays out clear, honest options.', kind: 'trust' },
+  { step: '3', title: 'We stay with you', text: 'From paperwork to closing, we walk the whole journey alongside you.', kind: 'commitment' },
+];
+
 export default function Home() {
   usePageMeta(
     'Real Estate, Finance & Legal Advisory',
     'One-stop advisory for real estate, finance, insurance, mutual funds, legal counsel and college admissions — thoughtfully guided from Vellore.'
   );
   const [testimonials, setTestimonials] = useState([]);
+  const [serviceCount, setServiceCount] = useState(6);
+  const [propertyCount, setPropertyCount] = useState(0);
 
   useEffect(() => {
     api.getTestimonials().then(setTestimonials).catch(() => {});
+    api.getServices().then((s) => setServiceCount(s.length)).catch(() => {});
+    api.getProperties().then((p) => setPropertyCount(p.length)).catch(() => {});
   }, []);
 
   return (
@@ -67,6 +78,53 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }} className="flex flex-wrap gap-4">
             <Link to="/services" className="btn-primary">Explore services →</Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Stats strip */}
+      <section className="bg-fawn/60 border-y border-bronze/10">
+        <div className="section py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+          <div>
+            <Counter to={serviceCount} />
+            <p className="text-xs text-bronze/60 mt-1 uppercase tracking-wide">Services offered</p>
+          </div>
+          <div>
+            <Counter to={propertyCount} suffix="+" />
+            <p className="text-xs text-bronze/60 mt-1 uppercase tracking-wide">Active listings</p>
+          </div>
+          <div>
+            <Counter to={testimonials.length} suffix="+" />
+            <p className="text-xs text-bronze/60 mt-1 uppercase tracking-wide">Client reviews</p>
+          </div>
+          <div>
+            <Counter to={24} suffix="h" />
+            <p className="text-xs text-bronze/60 mt-1 uppercase tracking-wide">Response time</p>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="section">
+        <p className="eyebrow mb-3 text-center">How It Works</p>
+        <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Three steps, start to finish.</h2>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {process.map((p, i) => (
+            <motion.div
+              key={p.step}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15 }}
+              className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+            >
+              <ThemedIllustration kind={p.kind} className="h-24 w-full" />
+              <div className="p-6">
+                <span className="text-gold font-serif text-2xl">{p.step}</span>
+                <h3 className="font-serif text-xl mt-1 mb-2">{p.title}</h3>
+                <p className="text-sm text-bronze/70">{p.text}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 

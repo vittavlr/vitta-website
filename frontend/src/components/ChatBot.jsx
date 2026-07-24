@@ -118,10 +118,12 @@ export default function ChatBot() {
         transition={{ delay: 1.2, type: 'spring', stiffness: 200 }}
         whileHover={{ scale: 1.08 }}
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-gradient-to-b from-goldlight to-gold shadow-lg flex items-center justify-center text-white text-2xl"
+        className="fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-gradient-to-b from-goldlight to-gold shadow-lg flex items-center justify-center text-white text-2xl overflow-hidden"
         aria-label="Chat with VITTA assistant"
       >
-        {open ? '✕' : '💬'}
+        {open ? '✕' : (
+          <span className="w-full h-full flex items-center justify-center bg-white/15 rounded-full">🤖</span>
+        )}
       </motion.button>
 
       <AnimatePresence>
