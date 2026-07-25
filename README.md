@@ -1,6 +1,6 @@
 # VITTA — Website + Admin/Owner Dashboards
 
-Rebuild of the VITTA site (real estate, finance, insurance, mutual funds, legal counsel, college
+VITTA site (real estate, finance, insurance, mutual funds, legal counsel, college
 admissions advisory) with a React + Framer Motion frontend and a FastAPI + MongoDB backend.
 
 ## Stack
