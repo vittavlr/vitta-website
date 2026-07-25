@@ -12,7 +12,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-gradient-to-b from-linen to-fawn border-t border-bronze/5">
+    <footer className="bg-fawn border-t border-bronze/15">
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
         <div>
           <div className="font-serif text-2xl">

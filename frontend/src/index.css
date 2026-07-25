@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  background-color: #F5F3ED;
+  background-color: #EFEBE0;
   color: #4A4433;
   font-family: 'Lato', sans-serif;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
@@ -22,7 +22,7 @@ h1, h2, h3, h4, .font-display {
 }
 
 .btn-outline {
-  @apply inline-flex items-center gap-2 border border-bronze/20 bg-white/30 backdrop-blur-md text-bronze px-6 py-3 rounded-full font-medium hover:bg-white/50 transition-all duration-300 hover:-translate-y-0.5;
+  @apply inline-flex items-center gap-2 border border-bronze/20 bg-white/20 backdrop-blur-md text-bronze px-6 py-3 rounded-full font-medium hover:bg-white/35 transition-all duration-300 hover:-translate-y-0.5;
 }
 
 .section {
@@ -34,7 +34,7 @@ h1, h2, h3, h4, .font-display {
 }
 
 .card {
-  @apply bg-white/40 border border-white/40 rounded-2xl p-8 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)];
+  @apply bg-white/25 border border-white/30 rounded-2xl p-8 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.10)] transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(74,68,51,0.16)];
 }
 
 .glow-hover {
