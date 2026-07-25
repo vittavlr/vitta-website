@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ThemedIllustration from '../components/ThemedIllustration';
 import AnnouncementsPopup from '../components/AnnouncementsPopup';
 import Counter from '../components/Counter';
+import FloatingDoodles from '../components/FloatingDoodles';
 import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 
@@ -82,8 +83,9 @@ export default function Home() {
       </section>
 
       {/* Stats strip */}
-      <section className="bg-fawn/60 border-y border-bronze/10">
-        <div className="section py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+      <section className="relative overflow-hidden bg-fawn/60 border-y border-bronze/10">
+        <FloatingDoodles />
+        <div className="relative z-10 section py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
           <div>
             <Counter to={serviceCount} />
             <p className="text-xs text-bronze/60 mt-1 uppercase tracking-wide">Services offered</p>
@@ -104,7 +106,9 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="section">
+      <section className="relative overflow-hidden section">
+        <FloatingDoodles variant="subtle" />
+        <div className="relative z-10">
         <p className="eyebrow mb-3 text-center">How It Works</p>
         <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Three steps, start to finish.</h2>
         <div className="grid sm:grid-cols-3 gap-6">
@@ -115,7 +119,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+              className="glow-hover rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
             >
               <ThemedIllustration kind={p.kind} className="h-24 w-full" />
               <div className="p-6">
@@ -125,6 +129,7 @@ export default function Home() {
               </div>
             </motion.div>
           ))}
+        </div>
         </div>
       </section>
 
@@ -190,7 +195,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="card"
+                className="card glow-hover"
               >
                 {t.rating && (
                   <div className="text-gold mb-3">{'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}</div>

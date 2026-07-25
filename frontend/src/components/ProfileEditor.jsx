@@ -59,10 +59,29 @@ export default function ProfileEditor() {
         <div>
           <label className="text-sm font-medium block mb-1">Photo</label>
           <input type="file" accept="image/*" onChange={onPhoto} className="text-sm" />
-          {form.photo && <img src={form.photo} alt="" className="w-16 h-16 rounded-full object-cover mt-2 border border-bronze/20" />}
+          {form.photo && (
+            <div className="flex items-center gap-3 mt-2">
+              <img src={form.photo} alt="" className="w-16 h-16 rounded-full object-cover border border-bronze/20" />
+              <button type="button" onClick={() => setForm({ ...form, photo: '' })} className="text-xs text-red-600">Remove photo</button>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <button type="submit" className="btn-primary text-sm py-2 px-4">Save Profile</button>
+          <button
+            type="button"
+            onClick={async () => {
+              if (!confirm('Clear title, bio, and photo from the public Contact page?')) return;
+              const cleared = { title: '', bio: '', photo: '' };
+              await api.updateProfile(cleared);
+              setForm(cleared);
+              setSaved(true);
+              setTimeout(() => setSaved(false), 2500);
+            }}
+            className="text-xs text-red-600"
+          >
+            Clear entire profile
+          </button>
           {saved && <span className="text-xs text-green-700">✓ Saved</span>}
         </div>
       </form>

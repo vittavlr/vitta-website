@@ -116,8 +116,8 @@ function Overview() {
         {byService.length === 0 ? (
           <p className="text-sm text-bronze/60">No inquiries yet.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <div className="flex items-end gap-4 h-56 min-w-max px-2 border-b border-bronze/20 pb-0">
+          <div>
+            <div className="flex items-end gap-4 h-56 flex-wrap justify-center px-2 border-b border-bronze/20 pb-0">
               {byService.map((s, i) => {
                 const isRealEstate = s.service.toLowerCase() === 'real estate';
                 return (
@@ -166,7 +166,7 @@ function Overview() {
                 );
               })}
             </div>
-            <div className="flex items-start gap-4 min-w-max px-2 mt-2">
+            <div className="flex items-start gap-4 flex-wrap justify-center px-2 mt-2">
               {byService.map((s) => (
                 <div key={s.service} className="w-16 shrink-0 text-center">
                   <span className="text-[10px] text-bronze/60 leading-tight break-words">{s.service}</span>

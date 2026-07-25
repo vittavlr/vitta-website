@@ -37,6 +37,14 @@ h1, h2, h3, h4, .font-display {
   @apply bg-white/40 border border-white/40 rounded-2xl p-8 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] transition-shadow duration-300 hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)];
 }
 
+.glow-hover {
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 40px rgba(201, 169, 106, 0.35), 0 8px 32px rgba(74, 68, 51, 0.1);
+  transform: translateY(-2px);
+}
+
 @media print {
   nav, footer, .no-print {
     display: none !important;
