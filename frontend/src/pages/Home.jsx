@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ThemedIllustration from '../components/ThemedIllustration';
+import FAQAccordion from '../components/FAQAccordion';
 import AnnouncementsPopup from '../components/AnnouncementsPopup';
 import Counter from '../components/Counter';
 import FloatingDoodles from '../components/FloatingDoodles';
@@ -28,12 +29,23 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState([]);
   const [serviceCount, setServiceCount] = useState(6);
   const [propertyCount, setPropertyCount] = useState(0);
+  const [featuredProperties, setFeaturedProperties] = useState([]);
 
   useEffect(() => {
     api.getTestimonials().then(setTestimonials).catch(() => {});
     api.getServices().then((s) => setServiceCount(s.length)).catch(() => {});
-    api.getProperties().then((p) => setPropertyCount(p.length)).catch(() => {});
+    api.getProperties().then((p) => {
+      setPropertyCount(p.length);
+      setFeaturedProperties((p.filter((x) => x.featured).length > 0 ? p.filter((x) => x.featured) : p).slice(0, 3));
+    }).catch(() => {});
   }, []);
+
+  const generalFaqs = [
+    { question: 'Which areas do you serve?', answer: 'We primarily work across Vellore and the surrounding region, with select services available further afield — ask us if you\'re unsure.' },
+    { question: 'Is the first consultation free?', answer: 'Yes — the initial conversation to understand your needs and outline options is always free, with no obligation.' },
+    { question: 'How quickly will I hear back?', answer: 'Every enquiry is responded to within 24 hours, usually much sooner.' },
+    { question: 'Do I need to visit your office?', answer: 'Not necessarily — many clients handle everything over phone, WhatsApp, or email. Office visits are welcome whenever helpful.' },
+  ];
 
   return (
     <div>
@@ -161,6 +173,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Properties */}
+      {featuredProperties.length > 0 && (
+        <section className="section">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <p className="eyebrow mb-3">Featured</p>
+              <h2 className="font-serif text-3xl md:text-4xl">Homes worth a look.</h2>
+            </div>
+            <Link to="/listings" className="text-gold text-sm font-semibold hover:underline hidden sm:block">
+              View all listings →
+            </Link>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredProperties.map((p, i) => (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Link to="/listings" className="glow-hover block rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]">
+                  {p.images?.[0] && <img src={p.images[0]} alt={p.title} className="w-full h-40 object-cover" />}
+                  <div className="p-5">
+                    <h3 className="font-serif text-lg mb-1">{p.title}</h3>
+                    <p className="text-xs text-bronze/60 mb-2">{p.location}</p>
+                    {p.price && <p className="text-gold font-semibold text-sm">{p.price}</p>}
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+          <div className="text-center mt-8 sm:hidden">
+            <Link to="/listings" className="text-gold text-sm font-semibold hover:underline">View all listings →</Link>
+          </div>
+        </section>
+      )}
+
       {/* About */}
       <section className="section">
         <p className="eyebrow mb-3">About VITTA</p>
@@ -236,6 +286,13 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* General FAQ */}
+      <section className="section">
+        <p className="eyebrow mb-3 text-center">Questions</p>
+        <h2 className="font-serif text-3xl md:text-4xl text-center mb-4">Good to know.</h2>
+        <FAQAccordion faqs={generalFaqs} title={null} className="max-w-3xl mx-auto" />
+      </section>
 
       {/* CTA banner */}
       <section className="relative overflow-hidden bg-gradient-to-b from-linen via-bronze/5 to-linen py-20">

@@ -4,44 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import ThemedIllustration from '../components/ThemedIllustration';
 import BackButton from '../components/BackButton';
+import FAQAccordion from '../components/FAQAccordion';
 import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
-
-function FAQAccordion({ faqs }) {
-  const [openIdx, setOpenIdx] = useState(null);
-  if (!faqs || faqs.length === 0) return null;
-
-  return (
-    <div className="mt-16 max-w-3xl">
-      <h2 className="font-serif text-2xl mb-6">Frequently Asked Questions</h2>
-      <div className="space-y-3">
-        {faqs.map((faq, i) => (
-          <div key={i} className="card p-0 overflow-hidden">
-            <button
-              onClick={() => setOpenIdx(openIdx === i ? null : i)}
-              className="w-full text-left px-6 py-4 flex justify-between items-center gap-4"
-            >
-              <span className="font-medium text-sm">{faq.question}</span>
-              <motion.span animate={{ rotate: openIdx === i ? 45 : 0 }} className="text-gold text-xl shrink-0">+</motion.span>
-            </button>
-            <AnimatePresence>
-              {openIdx === i && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <p className="px-6 pb-4 text-sm text-bronze/70">{faq.answer}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function ServiceDetail() {
   const { slug } = useParams();
