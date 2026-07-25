@@ -83,7 +83,7 @@ export default function Home() {
       </section>
 
       {/* Stats strip */}
-      <section className="relative overflow-hidden bg-fawn/60 border-y border-bronze/10">
+      <section className="relative overflow-hidden bg-gradient-to-b from-linen via-fawn/50 to-linen">
         <FloatingDoodles />
         <div className="relative z-10 section py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
           <div>
@@ -130,6 +130,34 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
+        </div>
+      </section>
+
+      {/* Why VITTA */}
+      <section className="section">
+        <p className="eyebrow mb-3 text-center">Why VITTA</p>
+        <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">More than an advisor.</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { title: 'Verified, always', text: 'Every property, every document, checked before it reaches you.', kind: 'trust' },
+            { title: 'One point of contact', text: 'No juggling five different agents — one advisor, every service.', kind: 'commitment' },
+            { title: 'Local expertise', text: 'Deep roots in Vellore mean we know the market, not just the listings.', kind: 'real-estate' },
+            { title: 'No hidden fees', text: 'What we quote is what you pay — nothing buried in the fine print.', kind: 'transparency' },
+          ].map((f, i) => (
+            <motion.div
+              key={f.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              whileHover={{ y: -6 }}
+              className="glow-hover rounded-2xl border border-white/40 bg-white/40 backdrop-blur-xl p-6 shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+            >
+              <ThemedIllustration kind={f.kind} className="h-16 w-16 rounded-full mb-4" />
+              <h3 className="font-serif text-lg mb-2">{f.title}</h3>
+              <p className="text-sm text-bronze/70">{f.text}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
@@ -184,7 +212,7 @@ export default function Home() {
 
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="section bg-fawn/60">
+        <section className="section bg-gradient-to-b from-linen via-fawn/50 to-linen">
           <p className="eyebrow mb-3 text-center">What Clients Say</p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Trusted by families across Vellore.</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -208,6 +236,23 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* CTA banner */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-linen via-bronze/5 to-linen py-20">
+        <FloatingDoodles variant="subtle" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="relative z-10 section text-center"
+        >
+          <h2 className="font-serif text-3xl md:text-4xl mb-4">Ready when you are.</h2>
+          <p className="text-bronze/70 mb-8 max-w-xl mx-auto">
+            Whether it's a home, a portfolio, or a decision you've been putting off — let's talk it through.
+          </p>
+          <Link to="/enquire" className="btn-primary">Start an enquiry →</Link>
+        </motion.div>
+      </section>
     </div>
   );
 }

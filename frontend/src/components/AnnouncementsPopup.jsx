@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
@@ -6,10 +6,22 @@ import { api } from '../api';
 export default function AnnouncementsPopup() {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(true);
+  const panelRef = useRef(null);
 
   useEffect(() => {
     api.getAnnouncements().then(setItems).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e) => {
+      if (panelRef.current && !panelRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
 
   if (items.length === 0) return null;
 
@@ -19,6 +31,7 @@ export default function AnnouncementsPopup() {
         {open ? (
           <motion.div
             key="panel"
+            ref={panelRef}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}

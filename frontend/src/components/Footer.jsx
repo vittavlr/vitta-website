@@ -12,7 +12,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-fawn border-t border-bronze/10">
+    <footer className="bg-gradient-to-b from-linen to-fawn border-t border-bronze/5">
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
         <div>
           <div className="font-serif text-2xl">
@@ -58,7 +58,7 @@ export default function Footer() {
           <div className="rounded-xl overflow-hidden border border-bronze/10 h-32 w-full">
             <iframe
               title="VITTA office location"
-              src="https://www.google.com/maps?q=12.860966,79.132826&output=embed"
+              src="https://www.google.com/maps?q=Vellore,Tamil+Nadu,India&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
