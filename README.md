@@ -34,7 +34,6 @@ vitta/
 cd backend
 cp .env.example .env
 ```
-
 Edit `.env`:
 - `MONGO_URI` — your Atlas connection string
 - `JWT_SECRET` — any long random string
