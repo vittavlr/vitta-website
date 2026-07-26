@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        linen: '#EFEBE0',
-        fawn: '#E0D9C4',
-        bronze: '#4A4433',
-        gold: '#93742D',
-        goldlight: '#B39A64',
+        linen: '#E3DCC9',
+        fawn: '#D4CAAE',
+        bronze: '#3D3826',
+        gold: '#7C6224',
+        goldlight: '#997D4C',
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],

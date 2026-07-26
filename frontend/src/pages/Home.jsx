@@ -41,10 +41,8 @@ export default function Home() {
   }, []);
 
   const generalFaqs = [
-    { question: 'Which areas do you serve?', answer: 'We primarily work across Vellore and the surrounding region, with select services available further afield — ask us if you\'re unsure.' },
-    { question: 'Is the first consultation free?', answer: 'Yes — the initial conversation to understand your needs and outline options is always free, with no obligation.' },
-    { question: 'How quickly will I hear back?', answer: 'Every enquiry is responded to within 24 hours, usually much sooner.' },
-    { question: 'Do I need to visit your office?', answer: 'Not necessarily — many clients handle everything over phone, WhatsApp, or email. Office visits are welcome whenever helpful.' },
+    { question: 'Is the first consultation free?', answer: 'Yes, always free with no obligation.' },
+    { question: 'How quickly will I hear back?', answer: 'Within 24 hours, usually sooner.' },
   ];
 
   return (
@@ -95,7 +93,7 @@ export default function Home() {
       </section>
 
       {/* Stats strip */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-linen via-fawn/50 to-linen">
+      <section className="relative overflow-hidden">
         <FloatingDoodles />
         <div className="relative z-10 section py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
           <div>
@@ -262,7 +260,7 @@ export default function Home() {
 
       {/* Testimonials */}
       {testimonials.length > 0 && (
-        <section className="section bg-gradient-to-b from-linen via-fawn/50 to-linen">
+        <section className="section">
           <p className="eyebrow mb-3 text-center">What Clients Say</p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Trusted by families across Vellore.</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -288,27 +286,9 @@ export default function Home() {
       )}
 
       {/* General FAQ */}
-      <section className="section">
-        <p className="eyebrow mb-3 text-center">Questions</p>
-        <h2 className="font-serif text-3xl md:text-4xl text-center mb-4">Good to know.</h2>
-        <FAQAccordion faqs={generalFaqs} title={null} className="max-w-3xl mx-auto" />
-      </section>
-
-      {/* CTA banner */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-linen via-bronze/5 to-linen py-20">
-        <FloatingDoodles variant="subtle" />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative z-10 section text-center"
-        >
-          <h2 className="font-serif text-3xl md:text-4xl mb-4">Ready when you are.</h2>
-          <p className="text-bronze/70 mb-8 max-w-xl mx-auto">
-            Whether it's a home, a portfolio, or a decision you've been putting off — let's talk it through.
-          </p>
-          <Link to="/enquire" className="btn-primary">Start an enquiry →</Link>
-        </motion.div>
+      <section className="section py-10">
+        <h2 className="font-serif text-2xl text-center mb-4">Good to know.</h2>
+        <FAQAccordion faqs={generalFaqs} title={null} className="max-w-lg mx-auto" />
       </section>
     </div>
   );
