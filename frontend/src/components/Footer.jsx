@@ -13,7 +13,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-fawn border-t border-bronze/15">
-      <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
+      <div className="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
         <div>
           <div className="font-serif text-2xl">
             V<span className="text-gold">I</span>TTA
@@ -55,7 +55,7 @@ export default function Footer() {
             )}
             <p className="text-xs text-bronze/60">Vellore, Tamil Nadu, India</p>
           </div>
-          <div className="rounded-xl overflow-hidden border border-bronze/10 h-32 w-full">
+          <div className="rounded-xl overflow-hidden border border-bronze/10 h-24 w-full">
             <iframe
               title="VITTA office location"
               src="https://www.google.com/maps?q=Vellore,Tamil+Nadu,India&output=embed"
@@ -69,13 +69,13 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="text-center pb-4 pt-2">
+      <div className="text-center pb-3 pt-1">
         <Link to="/vitta-private" className="text-[11px] text-bronze/30 hover:text-gold">
           Admin access
         </Link>
       </div>
 
-      <div className="text-center text-xs text-bronze/50 pb-6">
+      <div className="text-center text-xs text-bronze/50 pb-4">
         © {new Date().getFullYear()} VITTA. All rights reserved.
       </div>
 

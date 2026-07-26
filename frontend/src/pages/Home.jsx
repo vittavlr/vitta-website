@@ -43,6 +43,9 @@ export default function Home() {
   const generalFaqs = [
     { question: 'Is the first consultation free?', answer: 'Yes, always free with no obligation.' },
     { question: 'How quickly will I hear back?', answer: 'Within 24 hours, usually sooner.' },
+    { question: 'Which areas do you serve?', answer: 'Vellore and nearby areas.' },
+    { question: 'Do I need to visit the office?', answer: 'No, phone or WhatsApp works fine.' },
+    { question: 'Is there a fee to enquire?', answer: 'No, enquiries are always free.' },
   ];
 
   return (
@@ -116,9 +119,8 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="relative overflow-hidden section">
-        <FloatingDoodles variant="subtle" />
-        <div className="relative z-10">
+      <section className="section">
+        <div>
         <p className="eyebrow mb-3 text-center">How It Works</p>
         <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Three steps, start to finish.</h2>
         <div className="grid sm:grid-cols-3 gap-6">
@@ -288,7 +290,7 @@ export default function Home() {
       {/* General FAQ */}
       <section className="section py-10">
         <h2 className="font-serif text-2xl text-center mb-4">Good to know.</h2>
-        <FAQAccordion faqs={generalFaqs} title={null} className="max-w-lg mx-auto" />
+        <FAQAccordion faqs={generalFaqs} title={null} className="max-w-lg mx-auto" compact />
       </section>
     </div>
   );
