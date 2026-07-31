@@ -5,6 +5,7 @@ import { api } from '../api';
 import { usePageMeta } from '../usePageMeta';
 import ReviewModal from '../components/ReviewModal';
 import BackButton from '../components/BackButton';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function Contact() {
   usePageMeta('Enquire', "Tell us what you need — real estate, finance, insurance, legal, or admissions guidance — and we'll get back to you shortly.");
@@ -41,14 +42,19 @@ export default function Contact() {
   }, []);
 
   const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  const [attempted, setAttempted] = useState(false);
+  const fieldError = (key) => attempted && !form[key];
 
   const submit = async (e) => {
     e.preventDefault();
+    setAttempted(true);
+    if (!form.name || !form.phone || !form.service_interest) return;
     setStatus('sending');
     try {
       await api.submitLead(form);
       setStatus('success');
       setForm({ name: '', email: '', phone: '', service_interest: '', message: '', property_id: undefined, property_title: undefined });
+      setAttempted(false);
     } catch (err) {
       setErrorMsg(err.message);
       setStatus('error');
@@ -57,6 +63,7 @@ export default function Contact() {
 
   return (
     <div className="section max-w-2xl">
+      <Breadcrumbs trail={[{ label: 'Home', to: '/' }, { label: 'Enquire' }]} />
       <BackButton className="mb-6" />
       <p className="eyebrow mb-3">Enquire</p>
       <h1 className="font-serif text-4xl md:text-5xl mb-4">Let's think it through — together.</h1>
@@ -114,11 +121,13 @@ export default function Contact() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="text-sm font-medium">Name</label>
-                <input required value={form.name} onChange={update('name')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+                <input required value={form.name} onChange={update('name')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('name') ? 'border-red-400' : 'border-bronze/20'}`} />
+                {fieldError('name') && <p className="text-xs text-red-600 mt-1">Please enter your name.</p>}
               </div>
               <div>
                 <label className="text-sm font-medium">Phone</label>
-                <input required type="tel" value={form.phone} onChange={update('phone')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+                <input required type="tel" value={form.phone} onChange={update('phone')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('phone') ? 'border-red-400' : 'border-bronze/20'}`} />
+                {fieldError('phone') && <p className="text-xs text-red-600 mt-1">Please enter your phone number.</p>}
               </div>
             </div>
 
@@ -129,11 +138,12 @@ export default function Contact() {
               </div>
               <div>
                 <label className="text-sm font-medium">Type of service</label>
-                <select required value={form.service_interest} onChange={update('service_interest')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold">
+                <select required value={form.service_interest} onChange={update('service_interest')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('service_interest') ? 'border-red-400' : 'border-bronze/20'}`}>
                   <option value="">Select a service</option>
                   {services.map((s) => <option key={s.id} value={s.title}>{s.title}</option>)}
                   <option value="Other">Other</option>
                 </select>
+                {fieldError('service_interest') && <p className="text-xs text-red-600 mt-1">Please choose a service.</p>}
               </div>
             </div>
 

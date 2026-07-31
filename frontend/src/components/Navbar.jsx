@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-linen/90 backdrop-blur border-b border-bronze/10">
+    <header className="sticky top-0 z-40 bg-linen/95 backdrop-blur border-b border-bronze/10">
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <img src={logo} alt="VITTA" className="h-10 w-10 object-contain" />

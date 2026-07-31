@@ -6,6 +6,7 @@ import { SkeletonGrid } from '../components/Skeleton';
 import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
 import logo from '../assets/logo.png';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function Listings() {
   usePageMeta('Property Listings', 'Personally verified homes and investments — title, encumbrance, valuation and access all checked.');
@@ -45,6 +46,7 @@ export default function Listings() {
 
   return (
     <div className="section">
+      <Breadcrumbs trail={[{ label: 'Home', to: '/' }, { label: 'Listings' }]} />
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="eyebrow mb-3">
         Listings
       </motion.p>

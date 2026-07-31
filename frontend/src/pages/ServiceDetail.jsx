@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../api';
 import ThemedIllustration from '../components/ThemedIllustration';
 import BackButton from '../components/BackButton';
+import Breadcrumbs from '../components/Breadcrumbs';
 import FAQAccordion from '../components/FAQAccordion';
 import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
@@ -65,6 +66,7 @@ export default function ServiceDetail() {
           </div>
 
           <div className="section pt-12">
+            <Breadcrumbs trail={[{ label: 'Home', to: '/' }, { label: 'Services', to: '/services' }, { label: service.title }]} />
             <BackButton className="mb-6" />
             <p className="text-lg text-bronze/70 mb-8 max-w-2xl">{service.short_description}</p>
             <div className="card max-w-3xl">

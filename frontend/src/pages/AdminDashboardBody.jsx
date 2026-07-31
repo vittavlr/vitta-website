@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../api';
+import EmptyState from '../components/EmptyState';
 import { compressImageFile } from '../imageUtils';
 
 export default function AdminDashboardBody({ tab }) {
@@ -49,7 +50,7 @@ function LeadsPanel() {
   };
 
   if (loading) return <p className="text-bronze/60">Loading leads…</p>;
-  if (leads.length === 0) return <p className="text-bronze/60">No inquiries yet.</p>;
+  if (leads.length === 0) return <EmptyState kind="commitment" text="No inquiries yet — they'll show up here as they come in." />;
 
   // Group by service; groups with more than 2 leads render as a compact table,
   // smaller groups (and leads with no service set) render as individual cards.
@@ -636,7 +637,7 @@ function PropertiesPanel() {
       {loading ? (
         <p className="text-bronze/60">Loading…</p>
       ) : properties.length === 0 ? (
-        <p className="text-bronze/60">No listings yet — add one above.</p>
+        <EmptyState kind="real-estate" text="No listings yet — add one above to see it here." />
       ) : (
         <div className="space-y-3">
           {properties.map((p) => (
@@ -761,7 +762,7 @@ function TestimonialsPanel() {
       {loading ? (
         <p className="text-bronze/60">Loading…</p>
       ) : items.length === 0 ? (
-        <p className="text-bronze/60">No testimonials yet.</p>
+        <EmptyState kind="trust" text="No testimonials yet — add one above, or wait for a customer review." />
       ) : (
         <div className="space-y-8">
           {pending.length > 0 && (
