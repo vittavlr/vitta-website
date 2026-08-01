@@ -152,6 +152,7 @@ class PropertyBase(BaseModel):
     featured: bool = False
     map_link: Optional[str] = None
     external_link: Optional[str] = None
+    verified: bool = False
 
 
 class PropertyUpdate(BaseModel):
@@ -168,3 +169,4 @@ class PropertyUpdate(BaseModel):
     featured: Optional[bool] = None
     map_link: Optional[str] = None
     external_link: Optional[str] = None
+    verified: Optional[bool] = None

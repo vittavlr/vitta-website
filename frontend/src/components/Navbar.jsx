@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
-
-const links = [
-  { to: '/', label: 'Home' },
-  { to: '/services', label: 'Services' },
-  { to: '/listings', label: 'Listings' },
-  { to: '/contact', label: 'Contact' },
-];
+import { useLang } from '../context/LangContext';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { t, lang, toggle } = useLang();
+
+  const links = [
+    { to: '/', label: t.home },
+    { to: '/services', label: t.services },
+    { to: '/listings', label: t.listings },
+    { to: '/contact', label: t.contact },
+  ];
 
   return (
     <header className="sticky top-0 z-40 bg-linen/95 backdrop-blur border-b border-bronze/10">
@@ -44,9 +46,14 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <Link to="/enquire" className="hidden md:inline-flex btn-primary text-sm py-2.5 px-5">
-          Enquire
-        </Link>
+        <div className="hidden md:flex items-center gap-3">
+          <button onClick={toggle} className="text-xs font-semibold text-bronze/50 hover:text-gold border border-bronze/20 rounded-full px-2.5 py-1" title="Switch language">
+            {lang === 'en' ? 'தமிழ்' : 'EN'}
+          </button>
+          <Link to="/enquire" className="btn-primary text-sm py-2.5 px-5">
+            {t.enquire}
+          </Link>
+        </div>
 
         <button className="md:hidden text-2xl" onClick={() => setOpen(!open)} aria-label="Toggle menu">
           {open ? '✕' : '☰'}
@@ -67,8 +74,11 @@ export default function Navbar() {
                   {l.label}
                 </NavLink>
               ))}
+              <button onClick={toggle} className="text-xs font-semibold text-bronze/60 border border-bronze/20 rounded-full px-3 py-1.5 w-fit">
+                {lang === 'en' ? 'தமிழில் காண' : 'View in English'}
+              </button>
               <Link to="/enquire" onClick={() => setOpen(false)} className="btn-primary text-sm py-2.5 px-5 w-fit">
-                Enquire
+                {t.enquire}
               </Link>
             </div>
           </motion.nav>

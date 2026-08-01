@@ -8,6 +8,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import FAQAccordion from '../components/FAQAccordion';
 import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
+import { addRecentlyViewed } from '../localStore';
 
 export default function ServiceDetail() {
   const { slug } = useParams();
@@ -22,7 +23,10 @@ export default function ServiceDetail() {
     setService(null);
     setItems([]);
     setError(false);
-    api.getService(slug).then(setService).catch(() => setError(true));
+    api.getService(slug).then((s) => {
+      setService(s);
+      addRecentlyViewed({ label: s.title, link: s.slug === 'real-estate' ? '/listings' : `/services/${s.slug}` });
+    }).catch(() => setError(true));
     api.getServiceItems(slug).then(setItems).catch(() => {});
   }, [slug]);
 

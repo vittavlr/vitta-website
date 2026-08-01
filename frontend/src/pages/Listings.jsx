@@ -7,6 +7,7 @@ import { usePageMeta } from '../usePageMeta';
 import { buildMapUrls } from '../mapUtils';
 import logo from '../assets/logo.png';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { toggleFavorite, isFavorite } from '../localStore';
 
 export default function Listings() {
   usePageMeta('Property Listings', 'Personally verified homes and investments — title, encumbrance, valuation and access all checked.');
@@ -15,6 +16,7 @@ export default function Listings() {
   const [selected, setSelected] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [, setFavTick] = useState(0);
   const [contact, setContact] = useState({});
   const navigate = useNavigate();
 
@@ -90,13 +92,23 @@ export default function Listings() {
               transition={{ delay: i * 0.08 }}
               whileHover={{ y: -6 }}
               onClick={() => openProperty(p)}
-              className="card overflow-hidden p-0 cursor-pointer"
+              className="card overflow-hidden p-0 cursor-pointer relative"
             >
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(p); setFavTick((v) => v + 1); }}
+                className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/70 backdrop-blur-md flex items-center justify-center text-sm"
+                title="Save to favorites"
+              >
+                {isFavorite(p.id) ? '★' : '☆'}
+              </button>
               {p.images?.[0] && (
                 <img src={p.images[0]} alt={p.title} className="w-full h-48 object-cover" />
               )}
               <div className="p-6">
-                <h3 className="font-serif text-xl mb-1">{p.title}</h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-serif text-xl">{p.title}</h3>
+                  {p.verified && <span className="text-[10px] bg-gold/10 text-gold rounded-full px-2 py-0.5">✓ Verified</span>}
+                </div>
                 <p className="text-sm text-bronze/60 mb-3">{p.location}</p>
                 {p.price && <p className="text-gold font-semibold mb-3">{p.price}</p>}
                 <p className="text-sm text-bronze/70 line-clamp-3">{p.description}</p>
@@ -176,7 +188,10 @@ export default function Listings() {
                 >
                   ✕
                 </button>
-                <h2 className="font-serif text-3xl mb-1">{selected.title}</h2>
+                <div className="flex items-center gap-2 mb-1">
+                  <h2 className="font-serif text-3xl">{selected.title}</h2>
+                  {selected.verified && <span className="text-[10px] bg-gold/10 text-gold rounded-full px-2 py-0.5">✓ Verified</span>}
+                </div>
                 <p className="text-bronze/60 mb-3">{selected.location}</p>
                 {selected.price && <p className="text-gold font-semibold text-lg mb-4">{selected.price}</p>}
 

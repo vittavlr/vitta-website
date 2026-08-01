@@ -19,6 +19,7 @@ export default function AdminDashboardBody({ tab }) {
 function LeadsPanel() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   const load = () => api.listLeads().then(setLeads).catch(() => {}).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
@@ -52,10 +53,15 @@ function LeadsPanel() {
   if (loading) return <p className="text-bronze/60">Loading leads…</p>;
   if (leads.length === 0) return <EmptyState kind="commitment" text="No inquiries yet — they'll show up here as they come in." />;
 
+  const q = search.trim().toLowerCase();
+  const visibleLeads = q
+    ? leads.filter((l) => [l.name, l.phone, l.email, l.service_interest, l.property_title].some((v) => (v || '').toLowerCase().includes(q)))
+    : leads;
+
   // Group by service; groups with more than 2 leads render as a compact table,
   // smaller groups (and leads with no service set) render as individual cards.
   const groups = {};
-  leads.forEach((l) => {
+  visibleLeads.forEach((l) => {
     const key = l.service_interest || 'Not specified';
     if (!groups[key]) groups[key] = [];
     groups[key].push(l);
@@ -119,7 +125,13 @@ function LeadsPanel() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-end">
+      <div className="flex justify-between gap-3 flex-wrap">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search leads…"
+          className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm w-full sm:w-64"
+        />
         <button onClick={downloadCsv} className="btn-outline text-sm py-2 px-4">Export leads as CSV ↓</button>
       </div>
 
@@ -497,7 +509,7 @@ function ServiceItemsManager({ slug }) {
 const emptyProperty = {
   title: '', location: '', price: '', property_type: 'apartment', description: '',
   bedrooms: '', bathrooms: '', area_sqft: '', status: 'available', featured: false,
-  map_link: '', external_link: '',
+  map_link: '', external_link: '', verified: false,
 };
 
 
@@ -505,6 +517,7 @@ function PropertiesPanel() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyProperty);
+  const [search, setSearch] = useState('');
   const [photos, setPhotos] = useState([]); // array of data-url/url strings
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -541,7 +554,7 @@ function PropertiesPanel() {
       property_type: p.property_type || 'apartment', description: p.description,
       bedrooms: p.bedrooms ?? '', bathrooms: p.bathrooms ?? '', area_sqft: p.area_sqft ?? '',
       status: p.status, featured: p.featured,
-      map_link: p.map_link || '', external_link: p.external_link || '',
+      map_link: p.map_link || '', external_link: p.external_link || '', verified: p.verified || false,
     });
     setPhotos(p.images || []);
     setShowForm(true);
@@ -623,10 +636,16 @@ function PropertiesPanel() {
             <input placeholder="Website/reference link (optional)" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
           </div>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
-            Featured listing
-          </label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
+              Featured listing
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.verified} onChange={(e) => setForm({ ...form, verified: e.target.checked })} />
+              Verified ✓
+            </label>
+          </div>
           <div className="flex gap-3">
             <button type="submit" className="btn-primary text-sm py-2 px-4">{editingId ? 'Save Changes' : 'Add Property'}</button>
             <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="text-sm text-bronze/60">Cancel</button>
@@ -639,13 +658,22 @@ function PropertiesPanel() {
       ) : properties.length === 0 ? (
         <EmptyState kind="real-estate" text="No listings yet — add one above to see it here." />
       ) : (
-        <div className="space-y-3">
-          {properties.map((p) => (
+        <>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search properties…"
+            className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm w-full sm:w-64 mb-3"
+          />
+          <div className="space-y-3">
+            {properties
+              .filter((p) => !search.trim() || [p.title, p.location].some((v) => (v || '').toLowerCase().includes(search.trim().toLowerCase())))
+              .map((p) => (
             <div key={p.id} className="card flex justify-between items-start gap-4">
               <div className="flex gap-3 items-center">
                 {p.images?.[0] && <img src={p.images[0]} alt={p.title} className="w-14 h-14 object-cover rounded-md" />}
                 <div>
-                  <h4 className="font-serif text-lg">{p.title}</h4>
+                  <h4 className="font-serif text-lg">{p.title} {p.verified && <span className="text-[10px] bg-gold/10 text-gold rounded-full px-2 py-0.5 ml-1">✓ Verified</span>}</h4>
                   <p className="text-sm text-bronze/60">{p.location} · {p.status.replace('_', ' ')}</p>
                 </div>
               </div>
@@ -654,8 +682,9 @@ function PropertiesPanel() {
                 <button onClick={() => remove(p.id, p.title)} className="text-xs text-red-600">Delete</button>
               </div>
             </div>
-          ))}
-        </div>
+              ))}
+          </div>
+        </>
       )}
     </div>
   );

@@ -8,6 +8,7 @@ import Counter from '../components/Counter';
 import FloatingDoodles from '../components/FloatingDoodles';
 import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
+import { getRecentlyViewed } from '../localStore';
 
 const values = [
   { name: 'Trust', kind: 'trust', text: 'Every recommendation is grounded in verified facts, not sales targets.' },
@@ -30,8 +31,10 @@ export default function Home() {
   const [serviceCount, setServiceCount] = useState(6);
   const [propertyCount, setPropertyCount] = useState(0);
   const [featuredProperties, setFeaturedProperties] = useState([]);
+  const [recent, setRecent] = useState([]);
 
   useEffect(() => {
+    setRecent(getRecentlyViewed());
     api.getTestimonials().then(setTestimonials).catch(() => {});
     api.getServices().then((s) => setServiceCount(s.length)).catch(() => {});
     api.getProperties().then((p) => {
@@ -172,6 +175,20 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Recently Viewed */}
+      {recent.length > 0 && (
+        <section className="section py-6">
+          <p className="text-xs text-bronze/50 mb-3 uppercase tracking-wide">Recently viewed</p>
+          <div className="flex gap-3 flex-wrap">
+            {recent.map((r, i) => (
+              <Link key={i} to={r.link} className="text-xs bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-4 py-2 hover:text-gold">
+                {r.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Featured Properties */}
       {featuredProperties.length > 0 && (
