@@ -120,12 +120,12 @@ export default function Contact() {
 
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium">Name <span className="text-red-500">*</span></label>
                 <input required value={form.name} onChange={update('name')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('name') ? 'border-red-400' : 'border-bronze/20'}`} />
                 {fieldError('name') && <p className="text-xs text-red-600 mt-1">Please enter your name.</p>}
               </div>
               <div>
-                <label className="text-sm font-medium">Phone</label>
+                <label className="text-sm font-medium">Phone <span className="text-red-500">*</span></label>
                 <input required type="tel" value={form.phone} onChange={update('phone')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('phone') ? 'border-red-400' : 'border-bronze/20'}`} />
                 {fieldError('phone') && <p className="text-xs text-red-600 mt-1">Please enter your phone number.</p>}
               </div>
@@ -133,11 +133,12 @@ export default function Contact() {
 
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-sm font-medium">Email (optional)</label>
+                <label className="text-sm font-medium">Email</label>
                 <input type="email" value={form.email} onChange={update('email')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+                <p className="text-xs text-bronze/50 mt-1">Enter your email to receive updates by email — optional.</p>
               </div>
               <div>
-                <label className="text-sm font-medium">Type of service</label>
+                <label className="text-sm font-medium">Type of service <span className="text-red-500">*</span></label>
                 <select required value={form.service_interest} onChange={update('service_interest')} className={`mt-1 w-full rounded-lg border bg-white/70 px-4 py-2.5 outline-none focus:border-gold ${fieldError('service_interest') ? 'border-red-400' : 'border-bronze/20'}`}>
                   <option value="">Select a service</option>
                   {services.map((s) => <option key={s.id} value={s.title}>{s.title}</option>)}
@@ -148,7 +149,7 @@ export default function Contact() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Message (optional)</label>
+              <label className="text-sm font-medium">Message</label>
               <textarea rows={5} value={form.message} onChange={update('message')} className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
             </div>
 

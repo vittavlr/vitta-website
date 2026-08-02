@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime
 
 
@@ -57,6 +57,13 @@ class LeadCreate(BaseModel):
     message: Optional[str] = None
     property_id: Optional[str] = None
     property_title: Optional[str] = None
+
+    @field_validator('email', mode='before')
+    @classmethod
+    def blank_email_to_none(cls, v):
+        if v is None or (isinstance(v, str) and v.strip() == ''):
+            return None
+        return v
 
 
 class LeadUpdate(BaseModel):
