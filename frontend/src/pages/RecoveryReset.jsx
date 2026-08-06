@@ -51,19 +51,19 @@ export default function RecoveryReset() {
           </div>
 
           <label className="text-sm font-medium">Account email (current)</label>
-          <input required type="email" value={form.email} onChange={update('email')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+          <input required type="email" value={form.email} onChange={update('email')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold" />
 
           <label className="text-sm font-medium">Recovery code</label>
-          <input required value={form.recovery_code} onChange={update('recovery_code')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+          <input required value={form.recovery_code} onChange={update('recovery_code')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold" />
 
           <label className="text-sm font-medium">New password</label>
-          <input required type="password" minLength={8} value={form.new_password} onChange={update('new_password')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+          <input required type="password" minLength={8} value={form.new_password} onChange={update('new_password')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold" />
 
           <label className="text-sm font-medium">New email (optional)</label>
-          <input type="email" value={form.new_email} onChange={update('new_email')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+          <input type="email" value={form.new_email} onChange={update('new_email')} className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold" />
 
           <label className="text-sm font-medium">New phone (optional)</label>
-          <input value={form.new_phone} onChange={update('new_phone')} className="mt-1 mb-6 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold" />
+          <input value={form.new_phone} onChange={update('new_phone')} className="mt-1 mb-6 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold" />
 
           {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 

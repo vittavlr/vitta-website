@@ -47,7 +47,7 @@ export default function Login() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold"
+          className="mt-1 mb-4 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold"
         />
 
         <label className="text-sm font-medium">Password</label>
@@ -56,7 +56,7 @@ export default function Login() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 mb-6 w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold"
+          className="mt-1 mb-6 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold"
         />
 
         {error && <p className="text-red-600 text-sm mb-4">{error}</p>}

@@ -94,7 +94,7 @@ export default function ServiceDetail() {
                     <div
                       key={item.id}
                       onClick={() => item.link && window.open(item.link, '_blank', 'noopener,noreferrer')}
-                      className={`rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] flex flex-col ${item.link ? 'cursor-pointer hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)] transition-shadow' : ''}`}
+                      className={`rounded-2xl overflow-hidden border border-fawn/40 bg-fawn/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)] flex flex-col ${item.link ? 'cursor-pointer hover:shadow-[0_8px_40px_rgba(74,68,51,0.14)] transition-shadow' : ''}`}
                     >
                       {item.photos?.[0] && (
                         <img src={item.photos[0]} alt={item.title} className="w-full h-40 object-cover" />

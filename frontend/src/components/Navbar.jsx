@@ -3,6 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
 import { useLang } from '../context/LangContext';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -47,6 +48,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <DarkModeToggle />
           <button onClick={toggle} className="text-xs font-semibold text-bronze/50 hover:text-gold border border-bronze/20 rounded-full px-2.5 py-1" title="Switch language">
             {lang === 'en' ? 'தமிழ்' : 'EN'}
           </button>
@@ -74,9 +76,12 @@ export default function Navbar() {
                   {l.label}
                 </NavLink>
               ))}
-              <button onClick={toggle} className="text-xs font-semibold text-bronze/60 border border-bronze/20 rounded-full px-3 py-1.5 w-fit">
-                {lang === 'en' ? 'தமிழில் காண' : 'View in English'}
-              </button>
+              <div className="flex items-center gap-3">
+                <DarkModeToggle />
+                <button onClick={toggle} className="text-xs font-semibold text-bronze/60 border border-bronze/20 rounded-full px-3 py-1.5 w-fit">
+                  {lang === 'en' ? 'தமிழில் காண' : 'View in English'}
+                </button>
+              </div>
               <Link to="/enquire" onClick={() => setOpen(false)} className="btn-primary text-sm py-2.5 px-5 w-fit">
                 {t.enquire}
               </Link>

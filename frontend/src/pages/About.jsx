@@ -52,7 +52,7 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+            className="rounded-2xl overflow-hidden border border-fawn/40 bg-fawn/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
           >
             <ThemedIllustration kind={v.kind} className="h-28 w-full" />
             <div className="p-6">

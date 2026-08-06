@@ -134,7 +134,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className="glow-hover rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+              className="glow-hover rounded-2xl overflow-hidden border border-fawn/40 bg-fawn/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
             >
               <ThemedIllustration kind={p.kind} className="h-24 w-full" />
               <div className="p-6">
@@ -166,7 +166,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
               whileHover={{ y: -6 }}
-              className="glow-hover rounded-2xl border border-white/40 bg-white/40 backdrop-blur-xl p-6 shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+              className="glow-hover rounded-2xl border border-fawn/40 bg-fawn/40 backdrop-blur-xl p-6 shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
             >
               <ThemedIllustration kind={f.kind} className="h-16 w-16 rounded-full mb-4" />
               <h3 className="font-serif text-lg mb-2">{f.title}</h3>
@@ -182,7 +182,7 @@ export default function Home() {
           <p className="text-xs text-bronze/50 mb-3 uppercase tracking-wide">Recently viewed</p>
           <div className="flex gap-3 flex-wrap">
             {recent.map((r, i) => (
-              <Link key={i} to={r.link} className="text-xs bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-4 py-2 hover:text-gold">
+              <Link key={i} to={r.link} className="text-xs bg-fawn/30 backdrop-blur-md border border-fawn/40 rounded-full px-4 py-2 hover:text-gold">
                 {r.label}
               </Link>
             ))}
@@ -211,7 +211,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link to="/listings" className="glow-hover block rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]">
+                <Link to="/listings" className="glow-hover block rounded-2xl overflow-hidden border border-fawn/40 bg-fawn/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]">
                   {p.images?.[0] && <img src={p.images[0]} alt={p.title} className="w-full h-40 object-cover" />}
                   <div className="p-5">
                     <h3 className="font-serif text-lg mb-1">{p.title}</h3>
@@ -265,7 +265,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className="rounded-2xl overflow-hidden border border-white/40 bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
+              className="rounded-2xl overflow-hidden border border-fawn/40 bg-fawn/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(74,68,51,0.08)]"
             >
               <ThemedIllustration kind={v.kind} className="h-28 w-full" />
               <div className="p-6">

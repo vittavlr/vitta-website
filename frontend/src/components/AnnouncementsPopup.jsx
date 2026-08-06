@@ -36,7 +36,7 @@ export default function AnnouncementsPopup() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="w-72 max-h-[60vh] overflow-y-auto rounded-r-2xl rounded-l-none sm:rounded-2xl border border-white/40 bg-white/30 backdrop-blur-2xl shadow-[0_8px_32px_rgba(74,68,51,0.12)] p-4 ml-0 sm:ml-5"
+            className="w-72 max-h-[60vh] overflow-y-auto rounded-r-2xl rounded-l-none sm:rounded-2xl border border-fawn/40 bg-fawn/30 backdrop-blur-2xl shadow-[0_8px_32px_rgba(74,68,51,0.12)] p-4 ml-0 sm:ml-5"
           >
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-serif text-sm">📢 Announcements</h3>
@@ -67,7 +67,7 @@ export default function AnnouncementsPopup() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ x: 4 }}
             onClick={() => setOpen(true)}
-            className="rounded-r-2xl border border-l-0 border-white/40 bg-white/30 backdrop-blur-2xl shadow-[0_8px_32px_rgba(74,68,51,0.12)] px-3 py-4 text-lg"
+            className="rounded-r-2xl border border-l-0 border-fawn/40 bg-fawn/30 backdrop-blur-2xl shadow-[0_8px_32px_rgba(74,68,51,0.12)] px-3 py-4 text-lg"
             aria-label="Show announcements"
             title="Announcements"
           >

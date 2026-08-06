@@ -43,7 +43,7 @@ export default function ProfileEditor() {
             placeholder="e.g. Founder & Principal Advisor"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -53,7 +53,7 @@ export default function ProfileEditor() {
             placeholder="A short introduction customers will see on the Contact page"
             value={form.bio}
             onChange={(e) => setForm({ ...form, bio: e.target.value })}
-            className="mt-1 w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
           />
         </div>
         <div>

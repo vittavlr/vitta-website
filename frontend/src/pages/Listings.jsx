@@ -96,7 +96,7 @@ export default function Listings() {
             >
               <button
                 onClick={(e) => { e.stopPropagation(); toggleFavorite(p); setFavTick((v) => v + 1); }}
-                className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/70 backdrop-blur-md flex items-center justify-center text-sm"
+                className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-fawn/70 backdrop-blur-md flex items-center justify-center text-sm"
                 title="Save to favorites"
               >
                 {isFavorite(p.id) ? '★' : '☆'}
@@ -165,7 +165,7 @@ export default function Listings() {
                     {zoomed ? 'Click to zoom out' : 'Click to zoom in'}
                   </span>
                   {selected.images.length > 1 && (
-                    <div className="flex gap-2 p-3 overflow-x-auto bg-white/50">
+                    <div className="flex gap-2 p-3 overflow-x-auto bg-fawn/50">
                       {selected.images.map((img, idx) => (
                         <img
                           key={idx}

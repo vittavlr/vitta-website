@@ -122,7 +122,7 @@ export default function ChatBot() {
         aria-label="Chat with VITTA assistant"
       >
         {open ? '✕' : (
-          <span className="w-full h-full flex items-center justify-center bg-white/15 rounded-full">🤖</span>
+          <span className="w-full h-full flex items-center justify-center bg-fawn/15 rounded-full">🤖</span>
         )}
       </motion.button>
 
@@ -134,7 +134,7 @@ export default function ChatBot() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="fixed bottom-24 left-6 z-40 w-[92vw] max-w-sm h-[70vh] max-h-[520px] card p-0 overflow-hidden flex flex-col"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/40">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-fawn/40">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🤖</span>
                 <div>
@@ -166,12 +166,12 @@ export default function ChatBot() {
               ))}
             </div>
 
-            <form onSubmit={send} className="flex items-center gap-2 p-3 border-t border-white/40">
+            <form onSubmit={send} className="flex items-center gap-2 p-3 border-t border-fawn/40">
               <button
                 type="button"
                 onClick={startListening}
                 title="Speak your question"
-                className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm border ${listening ? 'bg-red-100 border-red-300 animate-pulse' : 'border-bronze/20 bg-white/70'}`}
+                className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm border ${listening ? 'bg-red-100 border-red-300 animate-pulse' : 'border-bronze/20 bg-fawn/70'}`}
               >
                 🎤
               </button>
@@ -179,7 +179,7 @@ export default function ChatBot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your question…"
-                className="flex-1 rounded-full border border-bronze/20 bg-white/70 px-4 py-2 text-sm outline-none focus:border-gold"
+                className="flex-1 rounded-full border border-bronze/20 bg-fawn/70 px-4 py-2 text-sm outline-none focus:border-gold"
               />
               <button type="submit" className="btn-primary text-sm py-2 px-4">Send</button>
             </form>

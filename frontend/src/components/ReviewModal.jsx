@@ -57,13 +57,13 @@ export default function ReviewModal({ onClose }) {
                 placeholder="Your name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
               />
               <input
                 placeholder="Context (optional, e.g. Homeowner, Vellore)"
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
               />
               <textarea
                 required
@@ -71,7 +71,7 @@ export default function ReviewModal({ onClose }) {
                 rows={4}
                 value={form.quote}
                 onChange={(e) => setForm({ ...form, quote: e.target.value })}
-                className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
               />
               <div>
                 <label className="text-sm font-medium block mb-2">Your rating</label>

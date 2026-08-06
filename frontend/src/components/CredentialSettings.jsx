@@ -90,7 +90,7 @@ export default function CredentialSettings() {
             placeholder={PURPOSES[purpose].placeholder}
             value={newValue}
             onChange={(e) => setNewValue(e.target.value)}
-            className="w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold"
+            className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold"
           />
           {error && <p className="text-red-600 text-sm">{error}</p>}
           <div className="flex gap-3">
@@ -116,7 +116,7 @@ export default function CredentialSettings() {
             maxLength={6}
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="w-full rounded-lg border border-bronze/20 bg-white/70 px-4 py-2.5 outline-none focus:border-gold tracking-[0.3em] text-center"
+            className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-4 py-2.5 outline-none focus:border-gold tracking-[0.3em] text-center"
           />
           {error && <p className="text-red-600 text-sm">{error}</p>}
           <div className="flex gap-3">

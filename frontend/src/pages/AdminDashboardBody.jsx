@@ -104,7 +104,7 @@ function LeadsPanel() {
         <select
           value={l.status}
           onChange={(e) => setStatus(l.id, e.target.value)}
-          className="h-fit rounded-lg border border-bronze/20 bg-white/70 px-3 py-1.5 text-sm"
+          className="h-fit rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-1.5 text-sm"
         >
           {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
         </select>
@@ -116,7 +116,7 @@ function LeadsPanel() {
           type="date"
           value={l.follow_up_date || ''}
           onChange={(e) => setFollowUp(l.id, e.target.value)}
-          className="rounded border border-bronze/20 bg-white/70 px-2 py-1 text-xs"
+          className="rounded border border-bronze/20 bg-fawn/70 px-2 py-1 text-xs"
         />
         <button onClick={() => remove(l.id)} className="text-xs text-red-600 ml-auto">Delete</button>
       </div>
@@ -130,7 +130,7 @@ function LeadsPanel() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search leads…"
-          className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm w-full sm:w-64"
+          className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm w-full sm:w-64"
         />
         <button onClick={downloadCsv} className="btn-outline text-sm py-2 px-4">Export leads as CSV ↓</button>
       </div>
@@ -166,7 +166,7 @@ function LeadsPanel() {
                         <select
                           value={l.status}
                           onChange={(e) => setStatus(l.id, e.target.value)}
-                          className="rounded-lg border border-bronze/20 bg-white/70 px-2 py-1 text-xs"
+                          className="rounded-lg border border-bronze/20 bg-fawn/70 px-2 py-1 text-xs"
                         >
                           {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
                         </select>
@@ -176,7 +176,7 @@ function LeadsPanel() {
                           type="date"
                           value={l.follow_up_date || ''}
                           onChange={(e) => setFollowUp(l.id, e.target.value)}
-                          className={`rounded border px-2 py-1 text-xs ${isOverdue(l) ? 'border-red-400 bg-red-50' : 'border-bronze/20 bg-white/70'}`}
+                          className={`rounded border px-2 py-1 text-xs ${isOverdue(l) ? 'border-red-400 bg-red-50' : 'border-bronze/20 bg-fawn/70'}`}
                         />
                       </td>
                       <td className="px-4 py-3">
@@ -289,9 +289,9 @@ function ServicesPanel() {
 
       {creating && (
         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={createService} className="card space-y-3 mb-6">
-          <input required placeholder="Service title (e.g. Tax Advisory)" value={newService.title} onChange={(e) => setNewService({ ...newService, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <textarea required placeholder="Short description (shown on cards)" rows={2} value={newService.short_description} onChange={(e) => setNewService({ ...newService, short_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <textarea required placeholder="Full description (shown on the service page)" rows={4} value={newService.full_description} onChange={(e) => setNewService({ ...newService, full_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input required placeholder="Service title (e.g. Tax Advisory)" value={newService.title} onChange={(e) => setNewService({ ...newService, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Short description (shown on cards)" rows={2} value={newService.short_description} onChange={(e) => setNewService({ ...newService, short_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Full description (shown on the service page)" rows={4} value={newService.full_description} onChange={(e) => setNewService({ ...newService, full_description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
           <div>
             <label className="text-sm font-medium block mb-1">Photo (optional — a themed illustration is used automatically if you skip this)</label>
             <input type="file" accept="image/*" onChange={onNewImageSelected} className="text-sm" />
@@ -310,20 +310,20 @@ function ServicesPanel() {
                 <input
                   value={editing.title}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                  className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 font-serif text-lg"
+                  className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 font-serif text-lg"
                 />
                 <textarea
                   value={editing.short_description}
                   onChange={(e) => setEditing({ ...editing, short_description: e.target.value })}
                   rows={2}
-                  className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
                   placeholder="Short description (shown on cards)"
                 />
                 <textarea
                   value={editing.full_description}
                   onChange={(e) => setEditing({ ...editing, full_description: e.target.value })}
                   rows={4}
-                  className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm"
                   placeholder="Full description (shown on service page)"
                 />
 
@@ -346,14 +346,14 @@ function ServicesPanel() {
                             placeholder="Question"
                             value={faq.question}
                             onChange={(e) => updateFaq(i, 'question', e.target.value)}
-                            className="w-full rounded border border-bronze/20 bg-white/70 px-2 py-1.5 text-xs"
+                            className="w-full rounded border border-bronze/20 bg-fawn/70 px-2 py-1.5 text-xs"
                           />
                           <textarea
                             placeholder="Answer"
                             rows={2}
                             value={faq.answer}
                             onChange={(e) => updateFaq(i, 'answer', e.target.value)}
-                            className="w-full rounded border border-bronze/20 bg-white/70 px-2 py-1.5 text-xs"
+                            className="w-full rounded border border-bronze/20 bg-fawn/70 px-2 py-1.5 text-xs"
                           />
                         </div>
                         <button type="button" onClick={() => removeFaq(i)} className="text-xs text-red-600 shrink-0">✕</button>
@@ -457,10 +457,10 @@ function ServiceItemsManager({ slug }) {
       {showForm && (
         <form onSubmit={submit} className="space-y-3 mb-4">
           <p className="text-xs font-medium text-bronze/60">{editingId ? 'Editing listing' : 'New listing'}</p>
-          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <input placeholder="Link (optional)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
           <div>
             <label className="text-sm font-medium block mb-1">Photos</label>
             <input type="file" accept="image/*" multiple onChange={onPhotosSelected} className="text-sm" />
@@ -600,20 +600,20 @@ function PropertiesPanel() {
         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
           <p className="text-sm font-medium text-bronze/70">{editingId ? 'Editing property' : 'New property'}</p>
           <div className="grid sm:grid-cols-2 gap-3">
-            <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input required placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input placeholder="Price (e.g. ₹85 Lakh)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <select value={form.property_type} onChange={(e) => setForm({ ...form, property_type: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+            <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input required placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input placeholder="Price (e.g. ₹85 Lakh)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <select value={form.property_type} onChange={(e) => setForm({ ...form, property_type: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm">
               {['apartment', 'villa', 'plot', 'commercial'].map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
-            <input type="number" placeholder="Bedrooms" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input type="number" placeholder="Bathrooms" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input type="number" placeholder="Area (sqft)" value={form.area_sqft} onChange={(e) => setForm({ ...form, area_sqft: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+            <input type="number" placeholder="Bedrooms" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input type="number" placeholder="Bathrooms" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input type="number" placeholder="Area (sqft)" value={form.area_sqft} onChange={(e) => setForm({ ...form, area_sqft: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm">
               {['available', 'sold', 'coming_soon'].map((t) => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
             </select>
           </div>
-          <textarea required placeholder="Description" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Description" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
 
           <div>
             <label className="text-sm font-medium block mb-1">Photos</label>
@@ -632,8 +632,8 @@ function PropertiesPanel() {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3">
-            <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input placeholder="Website/reference link (optional)" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+            <input placeholder="Coordinates (12.860966,79.132826) or a full Maps link" value={form.map_link} onChange={(e) => setForm({ ...form, map_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input placeholder="Website/reference link (optional)" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
           </div>
 
           <div className="flex gap-6">
@@ -663,7 +663,7 @@ function PropertiesPanel() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search properties…"
-            className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm w-full sm:w-64 mb-3"
+            className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm w-full sm:w-64 mb-3"
           />
           <div className="space-y-3">
             {properties
@@ -740,10 +740,10 @@ function TestimonialsPanel() {
     <div key={t.id} className="card">
       {editing?.id === t.id ? (
         <form onSubmit={saveEdit} className="space-y-2">
-          <input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <input value={editing.role || ''} onChange={(e) => setEditing({ ...editing, role: e.target.value })} placeholder="Role/context" className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <textarea value={editing.quote} onChange={(e) => setEditing({ ...editing, quote: e.target.value })} rows={2} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <select value={editing.rating || 5} onChange={(e) => setEditing({ ...editing, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+          <input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <input value={editing.role || ''} onChange={(e) => setEditing({ ...editing, role: e.target.value })} placeholder="Role/context" className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <textarea value={editing.quote} onChange={(e) => setEditing({ ...editing, quote: e.target.value })} rows={2} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <select value={editing.rating || 5} onChange={(e) => setEditing({ ...editing, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm">
             {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} star{r === 1 ? '' : 's'}</option>)}
           </select>
           <div className="flex gap-3">
@@ -777,11 +777,11 @@ function TestimonialsPanel() {
       {showForm && (
         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
           <div className="grid sm:grid-cols-2 gap-3">
-            <input required placeholder="Client name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-            <input placeholder="Role/context (optional, e.g. Homeowner, Vellore)" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+            <input required placeholder="Client name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+            <input placeholder="Role/context (optional, e.g. Homeowner, Vellore)" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
           </div>
-          <textarea required placeholder="Quote" rows={3} value={form.quote} onChange={(e) => setForm({ ...form, quote: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <select value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm">
+          <textarea required placeholder="Quote" rows={3} value={form.quote} onChange={(e) => setForm({ ...form, quote: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <select value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} className="rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm">
             {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} star{r === 1 ? '' : 's'}</option>)}
           </select>
           <button type="submit" className="btn-primary text-sm py-2 px-4">Add Testimonial</button>
@@ -850,9 +850,9 @@ function AnnouncementsPanel() {
 
       {showForm && (
         <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={submit} className="card space-y-3 mb-8">
-          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <textarea required placeholder="Message" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
-          <input placeholder="Link (optional, e.g. /services/finance)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-white/70 px-3 py-2 text-sm" />
+          <input required placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <textarea required placeholder="Message" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
+          <input placeholder="Link (optional, e.g. /services/finance)" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="w-full rounded-lg border border-bronze/20 bg-fawn/70 px-3 py-2 text-sm" />
           <button type="submit" className="btn-primary text-sm py-2 px-4">Post Announcement</button>
         </motion.form>
       )}

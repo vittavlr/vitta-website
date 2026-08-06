@@ -44,7 +44,7 @@ export default function ContactInfo() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="card mb-10">
           <div className="flex items-center gap-4 mb-4">
             {contact.photo && (
-              <img src={contact.photo} alt={contact.name} className="w-16 h-16 rounded-full object-cover border border-white/50" />
+              <img src={contact.photo} alt={contact.name} className="w-16 h-16 rounded-full object-cover border border-fawn/50" />
             )}
             <div>
               <p className="font-serif text-xl">{contact.name}</p>
