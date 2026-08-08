@@ -12,7 +12,7 @@ admissions advisory) with a React + Framer Motion frontend and a FastAPI + Mongo
   account's current address (SMTP) before the change is applied.
 
 ## Repo layout
-
+  
 ```
 vitta/
   backend/     FastAPI app (MongoDB, JWT auth, leads, services, properties)
