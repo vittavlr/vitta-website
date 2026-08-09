@@ -118,7 +118,7 @@ export default function ChatBot() {
         transition={{ delay: 1.2, type: 'spring', stiffness: 200 }}
         whileHover={{ scale: 1.08 }}
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-gradient-to-b from-goldlight to-gold shadow-lg flex items-center justify-center text-white text-2xl overflow-hidden"
+        className="fixed bottom-24 md:bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-gradient-to-b from-goldlight to-gold shadow-lg flex items-center justify-center text-white text-2xl overflow-hidden"
         aria-label="Chat with VITTA assistant"
       >
         {open ? '✕' : (
@@ -132,7 +132,7 @@ export default function ChatBot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 left-6 z-40 w-[92vw] max-w-sm h-[70vh] max-h-[520px] card p-0 overflow-hidden flex flex-col"
+            className="fixed bottom-40 md:bottom-24 left-6 z-40 w-[92vw] max-w-sm h-[70vh] max-h-[520px] card p-0 overflow-hidden flex flex-col"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-fawn/40">
               <div className="flex items-center gap-2">

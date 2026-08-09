@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import WhatsAppButton from './components/WhatsAppButton';
 import ChatBot from './components/ChatBot';
+import MobileEnquireBar from './components/MobileEnquireBar';
 import logo from './assets/logo.png';
 import { api } from './api';
 
@@ -36,13 +37,14 @@ function PublicLayout({ children }) {
         animate="animate"
         exit="exit"
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="min-h-[60vh]"
+        className="min-h-[60vh] pb-20 md:pb-0"
       >
         {children}
       </motion.main>
       <Footer />
       <WhatsAppButton />
       <ChatBot />
+      <MobileEnquireBar />
     </>
   );
 }

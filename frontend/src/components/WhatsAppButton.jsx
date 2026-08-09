@@ -23,7 +23,7 @@ export default function WhatsAppButton() {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 1, type: 'spring', stiffness: 200 }}
       whileHover={{ scale: 1.08 }}
-      className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#25D366] shadow-lg flex items-center justify-center text-white"
+      className="fixed bottom-24 md:bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#25D366] shadow-lg flex items-center justify-center text-white"
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
     >
