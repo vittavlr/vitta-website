@@ -16,6 +16,29 @@ export default function Listings() {
   const [selected, setSelected] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(null);
+
+  const nextImage = () => {
+    if (!selected?.images?.length) return;
+    setZoomed(false);
+    setActiveImage((i) => (i + 1) % selected.images.length);
+  };
+  const prevImage = () => {
+    if (!selected?.images?.length) return;
+    setZoomed(false);
+    setActiveImage((i) => (i - 1 + selected.images.length) % selected.images.length);
+  };
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'Escape') setSelected(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selected]);
   const [, setFavTick] = useState(0);
   const [contact, setContact] = useState({});
   const navigate = useNavigate();
@@ -152,15 +175,48 @@ export default function Listings() {
               <img src={logo} alt="" className="hidden print:block print-watermark" />
 
               {selected.images?.length > 0 && (
-                <div className="relative overflow-hidden bg-black">
+                <div
+                  className="relative overflow-hidden bg-black"
+                  onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+                  onTouchEnd={(e) => {
+                    if (touchStartX === null) return;
+                    const dx = e.changedTouches[0].clientX - touchStartX;
+                    if (dx > 50) prevImage();
+                    else if (dx < -50) nextImage();
+                    setTouchStartX(null);
+                  }}
+                >
                   <motion.img
+                    key={activeImage}
                     src={selected.images[activeImage]}
                     alt={selected.title}
                     onClick={() => setZoomed(!zoomed)}
-                    animate={{ scale: zoomed ? 2 : 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, scale: zoomed ? 2 : 1 }}
                     transition={{ duration: 0.3 }}
                     className={`w-full h-72 object-cover ${zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
                   />
+                  {selected.images.length > 1 && !zoomed && (
+                    <>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                        className="no-print absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center"
+                        aria-label="Previous photo"
+                      >
+                        ‹
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                        className="no-print absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center"
+                        aria-label="Next photo"
+                      >
+                        ›
+                      </button>
+                      <span className="absolute bottom-2 left-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full pointer-events-none">
+                        {activeImage + 1} / {selected.images.length}
+                      </span>
+                    </>
+                  )}
                   <span className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full pointer-events-none">
                     {zoomed ? 'Click to zoom out' : 'Click to zoom in'}
                   </span>
