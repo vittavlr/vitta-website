@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ThemedIllustration from '../components/ThemedIllustration';
 import FAQAccordion from '../components/FAQAccordion';
@@ -9,6 +9,12 @@ import FloatingDoodles from '../components/FloatingDoodles';
 import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 import { getRecentlyViewed } from '../localStore';
+
+const HERO_IMAGES = [
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80',
+];
 
 const values = [
   { name: 'Trust', kind: 'trust', text: 'Every recommendation is grounded in verified facts, not sales targets.' },
@@ -32,6 +38,12 @@ export default function Home() {
   const [propertyCount, setPropertyCount] = useState(0);
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [recent, setRecent] = useState([]);
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setHeroIndex((i) => (i + 1) % HERO_IMAGES.length), 6000);
+    return () => clearInterval(t);
+  }, []);
 
   useEffect(() => {
     setRecent(getRecentlyViewed());
@@ -56,12 +68,17 @@ export default function Home() {
       <AnnouncementsPopup />
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <motion.div
-          initial={{ scale: 1.15 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 12, ease: 'easeOut' }}
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"
-        />
+        <AnimatePresence>
+          <motion.div
+            key={heroIndex}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 1.2 }, scale: { duration: 8, ease: 'easeOut' } }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url('${HERO_IMAGES[heroIndex]}')` }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-linen/80" />
         <div className="relative section pt-24 pb-32">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="eyebrow mb-4">
