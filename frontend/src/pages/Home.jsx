@@ -10,12 +10,6 @@ import { usePageMeta } from '../usePageMeta';
 import { api } from '../api';
 import { getRecentlyViewed } from '../localStore';
 
-const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80',
-  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80',
-];
-
 const values = [
   { name: 'Trust', kind: 'trust', text: 'Every recommendation is grounded in verified facts, not sales targets.' },
   { name: 'Transparency', kind: 'transparency', text: 'Clear fees, clear timelines, and honest answers — always.' },
@@ -38,12 +32,13 @@ export default function Home() {
   const [propertyCount, setPropertyCount] = useState(0);
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [recent, setRecent] = useState([]);
-  const [heroIndex, setHeroIndex] = useState(0);
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setHeroIndex((i) => (i + 1) % HERO_IMAGES.length), 6000);
+    if (testimonials.length < 2) return;
+    const t = setInterval(() => setTestimonialIndex((i) => (i + 1) % testimonials.length), 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [testimonials.length]);
 
   useEffect(() => {
     setRecent(getRecentlyViewed());
@@ -68,17 +63,12 @@ export default function Home() {
       <AnnouncementsPopup />
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <AnimatePresence>
-          <motion.div
-            key={heroIndex}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ opacity: { duration: 1.2 }, scale: { duration: 8, ease: 'easeOut' } }}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('${HERO_IMAGES[heroIndex]}')` }}
-          />
-        </AnimatePresence>
+        <motion.div
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 12, ease: 'easeOut' }}
+          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"
+        />
         <div className="absolute inset-0 bg-linen/80" />
         <div className="relative section pt-24 pb-32">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="eyebrow mb-4">
@@ -299,24 +289,57 @@ export default function Home() {
         <section className="section">
           <p className="eyebrow mb-3 text-center">What Clients Say</p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-12">Trusted by families across Vellore.</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
+          <div className="max-w-xl mx-auto relative">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="card glow-hover"
+                key={testimonialIndex}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.4 }}
+                className="card glow-hover text-center"
               >
-                {t.rating && (
-                  <div className="text-gold mb-3">{'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}</div>
+                {testimonials[testimonialIndex].rating && (
+                  <div className="text-gold mb-3">
+                    {'★'.repeat(testimonials[testimonialIndex].rating)}{'☆'.repeat(5 - testimonials[testimonialIndex].rating)}
+                  </div>
                 )}
-                <p className="text-bronze/80 italic mb-4">"{t.quote}"</p>
-                <p className="text-sm font-semibold">{t.name}</p>
-                {t.role && <p className="text-xs text-bronze/50">{t.role}</p>}
+                <p className="text-bronze/80 italic mb-4">"{testimonials[testimonialIndex].quote}"</p>
+                <p className="text-sm font-semibold">{testimonials[testimonialIndex].name}</p>
+                {testimonials[testimonialIndex].role && (
+                  <p className="text-xs text-bronze/50">{testimonials[testimonialIndex].role}</p>
+                )}
               </motion.div>
-            ))}
+            </AnimatePresence>
+
+            {testimonials.length > 1 && (
+              <>
+                <button
+                  onClick={() => setTestimonialIndex((i) => (i - 1 + testimonials.length) % testimonials.length)}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-10 w-9 h-9 rounded-full bg-fawn/60 hover:bg-fawn text-bronze flex items-center justify-center"
+                  aria-label="Previous testimonial"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => setTestimonialIndex((i) => (i + 1) % testimonials.length)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-10 w-9 h-9 rounded-full bg-fawn/60 hover:bg-fawn text-bronze flex items-center justify-center"
+                  aria-label="Next testimonial"
+                >
+                  ›
+                </button>
+                <div className="flex justify-center gap-2 mt-6">
+                  {testimonials.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setTestimonialIndex(i)}
+                      className={`w-2 h-2 rounded-full ${i === testimonialIndex ? 'bg-gold' : 'bg-bronze/20'}`}
+                      aria-label={`Go to testimonial ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </section>
       )}
