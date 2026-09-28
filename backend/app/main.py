@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.auth import hash_password, hash_recovery_code
 from app.config import settings
 from app.database import services_collection, users_collection
-from app.routers import analytics, announcements, auth, leads, properties, services, testimonials
+from app.routers import analytics, announcements, auth, businesses, leads, properties, services, testimonials
 
 app = FastAPI(title="VITTA API")
 
@@ -25,6 +25,7 @@ app.include_router(properties.router)
 app.include_router(testimonials.router)
 app.include_router(analytics.router)
 app.include_router(announcements.router)
+app.include_router(businesses.router)
 
 DEFAULT_SERVICES = [
     {

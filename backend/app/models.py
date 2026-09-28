@@ -177,3 +177,24 @@ class PropertyUpdate(BaseModel):
     map_link: Optional[str] = None
     external_link: Optional[str] = None
     verified: Optional[bool] = None
+
+
+# ---------- Businesses (multi-business top switcher) ----------
+class BusinessBase(BaseModel):
+    name: str
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    services: List[str] = []
+    link: Optional[str] = None
+    logo: Optional[str] = None
+    order: int = 0
+
+
+class BusinessUpdate(BaseModel):
+    name: Optional[str] = None
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    services: Optional[List[str]] = None
+    link: Optional[str] = None
+    logo: Optional[str] = None
+    order: Optional[int] = None
